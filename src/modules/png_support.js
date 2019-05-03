@@ -28,12 +28,37 @@ const PNG = require('../libs/png');
 const adler32cs = require('../libs/adler32cs');
 const Deflater = require('../libs/Deflater');
 
+const arrayBufferToBinaryString = require('../libs/array_buffer').arrayBufferToBinaryString;
+const isArrayBufferView = require('../libs/array_buffer').isArrayBufferView;
+const isArrayBuffer = require('../libs/array_buffer').isArrayBuffer;
+
+// TODO(roman) move to shared enum
+const ImageCompression = {
+  NONE: 'NONE',
+  FAST: 'FAST',
+  MEDIUM: 'MEDIUM',
+  SLOW: 'SLOW'
+};
+
+// TODO(roman) move to shared
+const Decode = {
+  DCT_DECODE: 'DCTDecode',
+  FLATE_DECODE: 'FlateDecode',
+  LZW_DECODE: 'LZWDecode',
+  JPX_DECODE: 'JPXDecode',
+  JBIG2_DECODE: 'JBIG2Decode',
+  ASCII85_DECODE: 'ASCII85Decode',
+  ASCII_HEX_DECODE: 'ASCIIHexDecode',
+  RUN_LENGTH_DECODE: 'RunLengthDecode',
+  CCITT_FAX_DECODE: 'CCITTFaxDecode'
+};
+
 /**
 * jsPDF PNG PlugIn
 * @name png_support
 * @module
 */
-module.exports = function (jsPDFAPI) {
+module.exports = (function () {
   'use strict'
 
   /*
@@ -74,30 +99,22 @@ module.exports = function (jsPDFAPI) {
      4       Paeth
    */
 
-  var canCompress = function (value) {
-    return value !== jsPDFAPI.image_compression.NONE && hasCompressionJS();
-  };
-
-  var hasCompressionJS = function () {
-    return (typeof Deflater === 'function');
-  };
-
   var compressBytes = function (bytes, lineLength, colorsPerPixel, compression) {
     var level = 5;
     var filter_method = filterUp;
 
     switch (compression) {
-      case jsPDFAPI.image_compression.FAST:
+      case ImageCompression.FAST:
         level = 3;
         filter_method = filterSub;
         break;
 
-      case jsPDFAPI.image_compression.MEDIUM:
+      case ImageCompression.MEDIUM:
         level = 6;
         filter_method = filterAverage;
         break;
 
-      case jsPDFAPI.image_compression.SLOW:
+      case ImageCompression.SLOW:
         level = 9;
         filter_method = filterPaeth;
         break;
@@ -124,7 +141,7 @@ module.exports = function (jsPDFAPI) {
     cmpd[len++] = (checksum >>> 8) & 0xff;
     cmpd[len++] = checksum & 0xff;
 
-    return jsPDFAPI.__addimage__.arrayBufferToBinaryString(cmpd);
+    return arrayBufferToBinaryString(cmpd);
   };
 
   var createZlibHeader = function (level) {
@@ -273,15 +290,15 @@ module.exports = function (jsPDFAPI) {
   var getPredictorFromCompression = function (compression) {
     var predictor;
     switch (compression) {
-      case jsPDFAPI.image_compression.FAST:
+      case ImageCompression.FAST:
         predictor = 11;
         break;
 
-      case jsPDFAPI.image_compression.MEDIUM:
+      case ImageCompression.MEDIUM:
         predictor = 13;
         break;
 
-      case jsPDFAPI.image_compression.SLOW:
+      case ImageCompression.SLOW:
         predictor = 14;
         break;
 
@@ -293,25 +310,30 @@ module.exports = function (jsPDFAPI) {
   };
 
   /**
+   * This takes raw image data and returns an object suitable for adding as an image to a pdf
   * @name processPNG
   * @function
   * @ignore
   */
-  jsPDFAPI.processPNG = function (imageData, index, alias, compression) {
+  const processPNG = function (imageData, compression) {
     'use strict';
 
     var colorSpace,
-      filter = this.decode.FLATE_DECODE,
+      filter = Decode.FLATE_DECODE,
       bitsPerComponent,
       image, decodeParameters = '', trns,
       colors, pal, smask,
       pixels, len, alphaData, imgData, hasColors, pixel,
       i, n;
 
+      /*
     if (this.__addimage__.isArrayBuffer(imageData))
       imageData = new Uint8Array(imageData);
+      */
 
-    if (this.__addimage__.isArrayBufferView(imageData)) {
+      // TODO(roman): imageData should be assumed to be a uint8array
+      // or array buffer?
+    //if (this.__addimage__.isArrayBufferView(imageData)) {
       image = new PNG(imageData);
       imageData = image.imgData;
       bitsPerComponent = image.bits;
@@ -385,7 +407,7 @@ module.exports = function (jsPDFAPI) {
           bitsPerComponent = 8;
         }
 
-        if (canCompress(compression)) {
+        if (compression !== ImageCompression.NONE) {
           imageData = compressBytes(imgData, image.width * image.colors, image.colors, compression);
           smask = compressBytes(alphaData, image.width, 1, compression);
         } else {
@@ -444,20 +466,34 @@ module.exports = function (jsPDFAPI) {
 
       var predictor = getPredictorFromCompression(compression);
 
-      if (filter === this.decode.FLATE_DECODE) {
+      if (filter === Decode.FLATE_DECODE) {
         decodeParameters = '/Predictor ' + predictor + ' ';
       }
       decodeParameters += '/Colors ' + colors + ' /BitsPerComponent ' + bitsPerComponent + ' /Columns ' + image.width;
 
-      if (this.__addimage__.isArrayBuffer(imageData) || this.__addimage__.isArrayBufferView(imageData)) {
-        imageData = this.__addimage__.arrayBufferToBinaryString(imageData);
+      if (isArrayBuffer(imageData) || isArrayBufferView(imageData)) {
+        imageData = arrayBufferToBinaryString(imageData);
       }
 
-      if (smask && this.__addimage__.isArrayBuffer(smask) || this.__addimage__.isArrayBufferView(smask)) {
-        smask = this.__addimage__.arrayBufferToBinaryString(smask);
+      if (smask && isArrayBuffer(smask) || isArrayBufferView(smask)) {
+        smask = arrayBufferToBinaryString(smask);
       }
 
-      return { alias: alias, data: imageData, index: index, filter: filter, decodeParameters: decodeParameters, transparency: trns, palette: pal, sMask: smask, predictor: predictor, width: image.width, height: image.height, bitsPerComponent: bitsPerComponent, colorSpace: colorSpace };
+      return {
+        data: imageData,
+        filter: filter,
+        decodeParameters: decodeParameters,
+        transparency: trns,
+        palette: pal,
+        sMask: smask,
+        predictor: predictor,
+        width: image.width,
+        height: image.height,
+        bitsPerComponent: bitsPerComponent,
+        colorSpace: colorSpace
+      };
     }
-  }
-};
+  //}
+
+  return processPNG;
+})();

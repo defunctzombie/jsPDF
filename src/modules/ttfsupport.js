@@ -41,11 +41,7 @@ module.exports = function (jsPDFAPI) {
             var font = data.font;
             var instance = data.instance;
             if (typeof instance !== "undefined") {
-                if (instance.existsFileInVFS(font.postScriptName) === false) {
-                    file = instance.loadFile(font.postScriptName);
-                } else {
-                    file = instance.getFileFromVFS(font.postScriptName);
-                }
+                file = instance.getFileFromVFS(font.postScriptName);
                 if (typeof file !== "string") {
                     throw new Error("Font is not stored as string-data in vFS, import fonts or remove declaration doc.addFont('" + font.postScriptName + "').");
                 }
