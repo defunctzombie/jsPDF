@@ -1,12 +1,13 @@
 
-/* global describe, it, expect, jsPDF, comparePdf */
+/* global describe, it, expect */
 /**
  * Standard spec tests
  *
  * These tests return the datauristring so that reference files can be generated.
  * We compare the exact output.
  */
-
+const jsPDF = require('../');
+const comparePdf = require('./utils/compare');
 describe('Core: Standard Text', () => {
   it('should load', () => {
     // assertions here]

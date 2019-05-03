@@ -1,9 +1,13 @@
 /* eslint-disable no-console */
-/* global saveAs, RGBColor */
+/* global saveAs */
 // eslint-disable-next-line no-unused-vars
 
 const btoa = require('btoa');
+const RGBColor = require('./libs/rgbcolor');
+
 const filtersMixin = require('./modules/filters');
+const standardFontMetricsMixin = require('./modules/standard_fonts_metrics');
+const splitTextToSizeMixin = require('./modules/split_text_to_size');
 
 module.exports = (function (global) {
   'use strict';
@@ -5181,6 +5185,8 @@ module.exports = (function (global) {
   jsPDF.version = '0.0.0';
 
   filtersMixin(jsPDF.API);
+  standardFontMetricsMixin(jsPDF.API);
+  splitTextToSizeMixin(jsPDF.API);
 
   return jsPDF;
 })(global);

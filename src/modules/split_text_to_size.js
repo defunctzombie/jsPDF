@@ -1,4 +1,3 @@
-/* global jsPDF */
 /** @license
  * MIT license.
  * Copyright (c) 2012 Willow Systems Corporation, willow-systems.com
@@ -31,7 +30,7 @@
 * @name split_text_to_size
 * @module
 */
-(function (API) {
+module.exports = function (API) {
   'use strict'
   /**
    * Returns an array of length matching length of the 'word' string, with each
@@ -342,4 +341,4 @@
     return output
   }
 
-})(jsPDF.API);
+};
