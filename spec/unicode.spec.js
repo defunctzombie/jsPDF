@@ -1,11 +1,14 @@
 
-/* global describe, it, jsPDF, loadBinaryResource, comparePdf */
+/* global describe, it */
 /**
  * Standard spec tests
  *
  * These tests return the datauristring so that reference files can be generated.
  * We compare the exact output.
  */
+const jsPDF = require('../');
+const comparePdf = require('./utils/compare');
+const loadBinaryResource = require('./utils/loadBinaryResource');
 
 describe('Module: Unicode: Russian', function () {
   var PTSans = loadBinaryResource('reference/PTSans.ttf')
