@@ -1,5 +1,6 @@
-/* global describe, it, expect, jsPDF */
+/* global describe, it, expect */
 
+const jsPDF = require('../');
 
 describe('Module: Standard Font Metrics', () => {
     it('uncompress', () => {
