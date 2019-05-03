@@ -1,8 +1,23 @@
 /* eslint-disable no-self-assign */
-/* global describe, it, expect, jsPDF, comparePdf, Button, ComboBox, ChoiceField, EditBox, ListBox, PushButton, CheckBox, TextField, PasswordField, RadioButton, AcroForm */
+/* global describe, it, expect */
 /**
  * Acroform testing
  */
+const jsPDF = require('../');
+const comparePdf = require('./utils/compare');
+
+const AcroForm = jsPDF.AcroForm;
+const TextField = jsPDF.AcroForm.TextField;
+const RadioButton = jsPDF.AcroForm.RadioButton;
+const ListBox = jsPDF.AcroForm.ListBox;
+const ComboBox = jsPDF.AcroForm.ComboBox;
+const PasswordField = jsPDF.AcroForm.PasswordField;
+const Button = jsPDF.AcroForm.Button;
+const PushButton = jsPDF.AcroForm.PushButton;
+const EditBox = jsPDF.AcroForm.EditBox;
+const ChoiceField = jsPDF.AcroForm.ChoiceField;
+const CheckBox = jsPDF.AcroForm.CheckBox;
+
 describe('Module: Acroform Unit Test', function () {
 
   it('setBit', function () {

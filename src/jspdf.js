@@ -20,6 +20,7 @@ const javascriptMixin = require('./modules/javascript');
 const cellMixin = require('./modules/cell');
 const viewerPreferencesMixin = require('./modules/viewerpreferences');
 const xmpMixin = require('./modules/xmp_metadata');
+const acroformMixin = require('./modules/acroform');
 
 module.exports = (function (global) {
   'use strict';
@@ -5211,6 +5212,7 @@ module.exports = (function (global) {
   cellMixin(jsPDF.API);
   viewerPreferencesMixin(jsPDF.API);
   xmpMixin(jsPDF.API);
+  acroformMixin(jsPDF);
 
   return jsPDF;
 })(global);

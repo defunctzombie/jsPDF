@@ -1,4 +1,3 @@
-/* global jsPDF */
 /**
  * @license
  * Copyright (c) 2016 Alexander Weidt,
@@ -11,7 +10,7 @@
  * jsPDF AcroForm Plugin
  * @module AcroForm
  */
-(function (jsPDF, globalObj) {
+module.exports = function (jsPDF) {
   'use strict';
 
   var jsPDFAPI = jsPDF.API;
@@ -463,15 +462,15 @@
               appearanceStreamString += "<<";
               if (Object.keys(value).length >= 1 || Array.isArray(value)) {
                 // appearanceStream is an Array or Object!
-                for (var i in value) {
-                  if (value.hasOwnProperty(i)) {
-                  var obj = value[i];
+                for (var ii in value) {
+                  if (value.hasOwnProperty(ii)) {
+                  var obj = value[ii];
                   if (typeof obj === 'function') {
                     // if Function is referenced, call it in order
                     // to get the FormXObject
                     obj = obj.call(this, fieldObject);
                   }
-                  appearanceStreamString += ("/" + i + " " + obj + " ");
+                  appearanceStreamString += ("/" + ii + " " + obj + " ");
 
                   // In case the XForm is already used, e.g. OffState
                   // of CheckBoxes, don't add it
@@ -2464,7 +2463,7 @@
           var DotRadius = (AcroFormAppearance.internal.getWidth(formObject) <= AcroFormAppearance.internal.getHeight(formObject)) ?
           AcroFormAppearance.internal.getWidth(formObject) / 4 : AcroFormAppearance.internal.getHeight(formObject) / 4;
           // The Borderpadding...
-          var DotRadius = Number((DotRadius * 0.9).toFixed(5));
+          DotRadius = Number((DotRadius * 0.9).toFixed(5));
           // Save results for later use; no need to waste
             // processor ticks on doing math
           var k = Number((DotRadius * 2).toFixed(5));
@@ -2724,36 +2723,6 @@
     return addField.call(this, choiceField);
   };
   
-  if (typeof globalObj == "object" &&
-        typeof (globalObj["ChoiceField"]) === "undefined" &&
-        typeof (globalObj["ListBox"]) === "undefined" &&
-        typeof (globalObj["ComboBox"]) === "undefined" &&
-        typeof (globalObj["EditBox"]) === "undefined" &&
-        typeof (globalObj["Button"]) === "undefined" &&
-        typeof (globalObj["PushButton"]) === "undefined" &&
-        typeof (globalObj["RadioButton"]) === "undefined" &&
-        typeof (globalObj["CheckBox"]) === "undefined" &&
-        typeof (globalObj["TextField"]) === "undefined" &&
-        typeof (globalObj["PasswordField"]) === "undefined"
-    ) {
-    globalObj["ChoiceField"] = AcroFormChoiceField;
-    globalObj["ListBox"] = AcroFormListBox;
-    globalObj["ComboBox"] = AcroFormComboBox;
-    globalObj["EditBox"] = AcroFormEditBox;
-    globalObj["Button"] = AcroFormButton;
-    globalObj["PushButton"] = AcroFormPushButton;
-    globalObj["RadioButton"] = AcroFormRadioButton;
-    globalObj["CheckBox"] = AcroFormCheckBox;
-    globalObj["TextField"] = AcroFormTextField;
-    globalObj["PasswordField"] = AcroFormPasswordField;
-    
-    // backwardsCompatibility
-    globalObj["AcroForm"] = {Appearance: AcroFormAppearance};
-  } else {
-      // eslint-disable-next-line no-console
-      console.warn("AcroForm-Classes are not populated into global-namespace, because the class-Names exist already. This avoids conflicts with the already used framework.");
-  }
-  
   jsPDFAPI.AcroFormChoiceField = AcroFormChoiceField;
   jsPDFAPI.AcroFormListBox = AcroFormListBox;
   jsPDFAPI.AcroFormComboBox = AcroFormComboBox;
@@ -2793,4 +2762,4 @@
     PasswordField : AcroFormPasswordField,
     Appearance: AcroFormAppearance
   };
-})(jsPDF, (typeof window !== "undefined" && window || typeof global !== "undefined" && global));
+};
