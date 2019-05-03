@@ -332,9 +332,9 @@ describe('Core: Unit Tests', () => {
     const doc = jsPDF()
     doc.addPage();
     doc.addPage();
-    expect(doc.internal.getPageInfo(1)).toEqual({ objId: 0, pageNumber: 1, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0} });
-    expect(doc.internal.getPageInfo(2)).toEqual({ objId: 0, pageNumber: 2, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0} });
-    expect(doc.internal.getPageInfo(3)).toEqual({ objId: 0, pageNumber: 3, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0} });
+    expect(doc.internal.getPageInfo(1)).toEqual({ objId: 0, pageNumber: 1, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0, annotations: []} });
+    expect(doc.internal.getPageInfo(2)).toEqual({ objId: 0, pageNumber: 2, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0, annotations: []} });
+    expect(doc.internal.getPageInfo(3)).toEqual({ objId: 0, pageNumber: 3, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0, annotations: []} });
 
     expect(function () { doc.internal.getPageInfo('invalid'); }).toThrow(new Error('Invalid argument passed to jsPDF.getPageInfo'));
     expect(function () { doc.internal.getPageInfo(3.14); }).toThrow(new Error('Invalid argument passed to jsPDF.getPageInfo'));
@@ -356,6 +356,7 @@ describe('Core: Unit Tests', () => {
         userUnit: 1.0,
         objId: 0,
         contentsObjId: 0,
+        annotations: [],
       }
     });
   });

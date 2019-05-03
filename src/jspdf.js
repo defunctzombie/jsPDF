@@ -11,6 +11,7 @@ const splitTextToSizeMixin = require('./modules/split_text_to_size');
 const outlineMixin = require('./modules/outline');
 const addImageMixin = require('./modules/addimage');
 const totalPagesMixin = require('./modules/total_pages');
+const annotationsMixin = require('./modules/annotations');
 
 module.exports = (function (global) {
   'use strict';
@@ -5193,6 +5194,7 @@ module.exports = (function (global) {
   outlineMixin(jsPDF.API);
   addImageMixin(jsPDF.API);
   totalPagesMixin(jsPDF.API);
+  annotationsMixin(jsPDF.API);
 
   return jsPDF;
 })(global);

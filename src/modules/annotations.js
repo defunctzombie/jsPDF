@@ -1,4 +1,3 @@
-/* global jsPDF */
 /**
  * @license
  * Copyright (c) 2014 Steven Spungin (TwelveTone LLC)  steven@twelvetone.tv
@@ -53,7 +52,7 @@
 	FitBH
 	FitBV
  */
-(function (jsPDFAPI) {
+module.exports = function (jsPDFAPI) {
 	'use strict';
 
 	var notEmpty = function (obj) {
@@ -64,7 +63,7 @@
 		}
 	};
 
-	jsPDF.API.events.push(['addPage', function (addPageData) {
+	jsPDFAPI.events.push(['addPage', function (addPageData) {
 		var pageInfo = this.internal.getPageInfo(addPageData.pageNumber);
 		pageInfo.pageContext.annotations = [];
 	}]);
@@ -277,4 +276,4 @@
 
 	return this;
 
-})(jsPDF.API);
+};

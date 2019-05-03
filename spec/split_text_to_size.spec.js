@@ -1,9 +1,10 @@
 
-/* global describe, it, jsPDF, expect */
+/* global describe, it, expect */
 /**
  * Standard spec tests
  *
  */
+const jsPDF = require('../');
 
 describe('Module: split_text_to_size', () => {
 
