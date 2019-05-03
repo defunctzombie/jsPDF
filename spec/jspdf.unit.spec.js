@@ -1,15 +1,16 @@
 
-/* global describe, xit, it, jsPDF, comparePdf, jasmine, expect */
+/* global describe, it, expect */
 /**
  * Standard spec tests
  *
  * These tests return the datauristring so that reference files can be generated.
  * We compare the exact output.
  */
+const jsPDF = require('../');
+const btoa = require('btoa');
 
 describe('Core: Unit Tests', () => {
 
-  var global = (typeof self !== "undefined" && self || typeof window !== "undefined" && window || typeof global !== "undefined" && global || Function('return typeof this === "object" && this.content')() || Function('return this')());
   //PubSub-Functionality
 
   it('jsPDF PubSub basic check', () => {
@@ -284,30 +285,22 @@ describe('Core: Unit Tests', () => {
     doc.__private__.resetCustomOutputDestination();
   });
 
-
-
-  it('jsPDF private function out', () => {
-    const doc = jsPDF();
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    writeArray = doc.__private__.out(2);
-    expect(writeArray[0]).toEqual('2');
-
-    doc.__private__.resetCustomOutputDestination();
-  });
-
   it('jsPDF private function write', () => {
-    var doc = jsPDF();
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    writeArray = doc.__private__.write('test');
-    expect(writeArray[0]).toEqual('test');
+    {
+      const doc = jsPDF();
+      let writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      writeArray = doc.__private__.write('test');
+      expect(writeArray[0]).toEqual('test');
+    }
 
-    doc = jsPDF();
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    writeArray = doc.__private__.write('test', 'test2');
-    expect(writeArray[0]).toEqual('test test2');
+    {
+      const doc = jsPDF();
+      let writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      writeArray = doc.__private__.write('test', 'test2');
+      expect(writeArray[0]).toEqual('test test2');
+    }
 
   });
 
@@ -339,9 +332,9 @@ describe('Core: Unit Tests', () => {
     const doc = jsPDF()
     doc.addPage();
     doc.addPage();
-    expect(doc.internal.getPageInfo(1)).toEqual({ objId: 0, pageNumber: 1, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0, annotations: [] } });
-    expect(doc.internal.getPageInfo(2)).toEqual({ objId: 0, pageNumber: 2, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0, annotations: [] } });
-    expect(doc.internal.getPageInfo(3)).toEqual({ objId: 0, pageNumber: 3, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0, annotations: [] } });
+    expect(doc.internal.getPageInfo(1)).toEqual({ objId: 0, pageNumber: 1, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0} });
+    expect(doc.internal.getPageInfo(2)).toEqual({ objId: 0, pageNumber: 2, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0} });
+    expect(doc.internal.getPageInfo(3)).toEqual({ objId: 0, pageNumber: 3, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0} });
 
     expect(function () { doc.internal.getPageInfo('invalid'); }).toThrow(new Error('Invalid argument passed to jsPDF.getPageInfo'));
     expect(function () { doc.internal.getPageInfo(3.14); }).toThrow(new Error('Invalid argument passed to jsPDF.getPageInfo'));
@@ -351,7 +344,20 @@ describe('Core: Unit Tests', () => {
     const doc = jsPDF()
     doc.addPage();
     doc.addPage();
-    expect(doc.__private__.getCurrentPageInfo()).toEqual({ objId: 0, pageNumber: 3, pageContext: { mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 }, artBox: null, bleedBox: null, cropBox: null, trimBox: null, userUnit: 1.0, objId: 0, contentsObjId: 0, annotations: [] } });
+    expect(doc.__private__.getCurrentPageInfo()).toEqual({
+      objId: 0,
+      pageNumber: 3,
+      pageContext: {
+        mediaBox: { bottomLeftX: 0, bottomLeftY: 0, topRightX: 595.28, topRightY: 841.89 },
+        artBox: null,
+        bleedBox: null,
+        cropBox: null,
+        trimBox: null,
+        userUnit: 1.0,
+        objId: 0,
+        contentsObjId: 0,
+      }
+    });
   });
 
   it('jsPDF private function getArrayBuffer', () => {
@@ -461,25 +467,31 @@ describe('Core: Unit Tests', () => {
 
     expect(function () { doc.__private__.setLineDash(''); }).not.toThrow(new Error('Invalid arguments passed to jsPDF.setLineDash'));
 
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    expect(function () { doc.__private__.setLineDash(); }).not.toThrow(new Error('Invalid arguments passed to jsPDF.setLineDash'));
+    {
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      expect(function () { doc.__private__.setLineDash(); }).not.toThrow(new Error('Invalid arguments passed to jsPDF.setLineDash'));
+      expect(writeArray).toEqual(['[] 0.000 d']);
+    }
 
-    expect(writeArray).toEqual(['[] 0.000 d']);
+    {
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      expect(function () { doc.__private__.setLineDash('1 1', '1'); }).toThrow(new Error('Invalid arguments passed to jsPDF.setLineDash'));
+    }
 
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    expect(function () { doc.__private__.setLineDash('1 1', '1'); }).toThrow(new Error('Invalid arguments passed to jsPDF.setLineDash'));
+    {
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      expect(function () { doc.__private__.setLineDash('1 1', 1); }).toThrow(new Error('Invalid arguments passed to jsPDF.setLineDash'));
+    }
 
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    expect(function () { doc.__private__.setLineDash('1 1', 1); }).toThrow(new Error('Invalid arguments passed to jsPDF.setLineDash'));
-
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    expect(function () { doc.__private__.setLineDash([1, 1], 1) }).not.toThrow(new Error('Invalid arguments passed to jsPDF.setLineDash'));
-
-    expect(writeArray).toEqual(['[2.835 2.835] 2.835 d']);
+    {
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      expect(function () { doc.__private__.setLineDash([1, 1], 1) }).not.toThrow(new Error('Invalid arguments passed to jsPDF.setLineDash'));
+      expect(writeArray).toEqual(['[2.835 2.835] 2.835 d']);
+    }
   });
 
   it('jsPDF private function getLineHeight', () => {
@@ -565,11 +577,6 @@ describe('Core: Unit Tests', () => {
     expect(doc.internal.pageSize.width).toEqual(841.89);
 
   });
-  it('jsPDF private function getR2L', () => {
-    const doc = jsPDF()
-
-    expect(doc.__private__.getR2L()).toEqual(false);
-  });
 
   it('jsPDF private function setR2L', () => {
     const doc = jsPDF()
@@ -579,19 +586,6 @@ describe('Core: Unit Tests', () => {
   });
 
   it('jsPDF public function setR2L', () => {
-    const doc = jsPDF()
-    expect(doc.getR2L()).toEqual(false);
-    doc.setR2L(true);
-    expect(doc.getR2L()).toEqual(true);
-  });
-
-  it('jsPDF public function getR2L', () => {
-    const doc = jsPDF()
-
-    expect(doc.getR2L()).toEqual(false);
-  });
-
-  it('jsPDF private function setR2L', () => {
     const doc = jsPDF()
     expect(doc.getR2L()).toEqual(false);
     doc.setR2L(true);
@@ -645,17 +639,6 @@ describe('Core: Unit Tests', () => {
     const doc = jsPDF();
     doc.__private__.setTextColor(255, 0, 0);
     expect(doc.__private__.getTextColor()).toEqual('#ff0000');
-  });
-
-  it('jsPDF private function getFillColor', () => {
-    const doc = jsPDF();
-    expect(doc.__private__.getFillColor()).toEqual('#000000')
-  });
-
-  it('jsPDF private function getFillColor', () => {
-    const doc = jsPDF();
-    doc.__private__.setFillColor(255, 0, 0);
-    expect(doc.__private__.getFillColor()).toEqual('#ff0000');
   });
 
   it('jsPDF private function getStrokeColor', () => {
@@ -874,15 +857,19 @@ describe('Core: Unit Tests', () => {
   it('jsPDF private function rect', () => {
     const doc = jsPDF();
 
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    doc.__private__.rect(1, 2, 3, 4, 'F');
-    expect(writeArray).toEqual(["2.83 836.22 8.50 -11.34 re", "f"]);
+    {
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      doc.__private__.rect(1, 2, 3, 4, 'F');
+      expect(writeArray).toEqual(["2.83 836.22 8.50 -11.34 re", "f"]);
+    }
 
-    writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    doc.__private__.rect(1, 2, 3, 4, null);
-    expect(writeArray).toEqual(["2.83 836.22 8.50 -11.34 re"]);
+    {
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      doc.__private__.rect(1, 2, 3, 4, null);
+      expect(writeArray).toEqual(["2.83 836.22 8.50 -11.34 re"]);
+    }
 
     expect(function () { doc.__private__.rect(1, 2, 3, 4, 'F'); }).not.toThrow(new Error('Invalid arguments passed to jsPDF.rect'));
     expect(function () { doc.__private__.rect('invalid', 2, 3, 4, 'F'); }).toThrow(new Error('Invalid arguments passed to jsPDF.rect'));
@@ -891,13 +878,14 @@ describe('Core: Unit Tests', () => {
     expect(function () { doc.__private__.rect(1, 2, 3, 'invalid', 'F'); }).toThrow(new Error('Invalid arguments passed to jsPDF.rect'));
     expect(function () { doc.__private__.rect(1, 2, 3, 4, 'invalid'); }).toThrow(new Error('Invalid arguments passed to jsPDF.rect'));
 
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    doc.__private__.rect(1, 2, 3, 4, 'F');
-    expect(writeArray).toEqual(['2.83 836.22 8.50 -11.34 re', 'f']);
+    {
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      doc.__private__.rect(1, 2, 3, 4, 'F');
+      expect(writeArray).toEqual(['2.83 836.22 8.50 -11.34 re', 'f']);
+    }
 
     expect(doc.__private__.rect(1, 2, 3, 4, 'F')).toBe(doc.__private__);
-
   });
 
   it('jsPDF private function circle', () => {
@@ -913,18 +901,21 @@ describe('Core: Unit Tests', () => {
   });
 
   it('jsPDF private function clip', () => {
-    var doc = jsPDF();
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    doc.__private__.clip("evenodd");
-    expect(writeArray).toEqual(['W*']);
+    {
+      const doc = jsPDF();
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      doc.__private__.clip("evenodd");
+      expect(writeArray).toEqual(['W*']);
+    }
 
-    var doc = jsPDF();
-    var writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    doc.__private__.clip();
-    expect(writeArray).toEqual(['W']);
-
+    {
+      const doc = jsPDF();
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      doc.__private__.clip();
+      expect(writeArray).toEqual(['W']);
+    }
   });
 
   it('jsPDF private function clip_fixed', () => {
@@ -1370,34 +1361,38 @@ break`, 10, 10, { scope: doc });
   });
 
   it('jsPDF private function putInfo', () => {
-    var doc = jsPDF();
 
-    var writeArray;
+
 
     //without documentProperties
-    doc = jsPDF();
-    writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    var pdfDateString = "D:19871210000000+00'00'";
-    doc.__private__.setCreationDate(pdfDateString);
-    doc.__private__.putInfo();
-    expect(writeArray).toEqual(['3 0 obj', '<<', '/Producer (jsPDF 0.0.0)', "/CreationDate (D:19871210000000+00'00')", '>>', 'endobj']);
+    {
+      let writeArray;
+      const doc = jsPDF();
+      writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      const pdfDateString = "D:19871210000000+00'00'";
+      doc.__private__.setCreationDate(pdfDateString);
+      doc.__private__.putInfo();
+      expect(writeArray).toEqual(['3 0 obj', '<<', '/Producer (jsPDF 0.0.0)', "/CreationDate (D:19871210000000+00'00')", '>>', 'endobj']);
+    }
 
-    doc = jsPDF();
-    writeArray = [];
-    doc.__private__.setCustomOutputDestination(writeArray);
-    var pdfDateString = "D:19871210000000+00'00'";
-    doc.__private__.setCreationDate(pdfDateString);
+    {
+      const doc = jsPDF();
+      const writeArray = [];
+      doc.__private__.setCustomOutputDestination(writeArray);
+      const pdfDateString = "D:19871210000000+00'00'";
+      doc.__private__.setCreationDate(pdfDateString);
 
-    doc.__private__.setDocumentProperties({
-      'title': 'Title',
-      'subject': 'Subject',
-      'author': 'Author X',
-      'keywords': 'Keyword1, Keyword2',
-      'creator': 'Creator'
-    });
-    doc.__private__.putInfo();
-    expect(writeArray).toEqual(['3 0 obj', '<<', '/Producer (jsPDF 0.0.0)', '/Title (Title)', '/Subject (Subject)', '/Author (Author X)', '/Keywords (Keyword1, Keyword2)', '/Creator (Creator)', "/CreationDate (D:19871210000000+00'00')", '>>', 'endobj']);
+      doc.__private__.setDocumentProperties({
+        'title': 'Title',
+        'subject': 'Subject',
+        'author': 'Author X',
+        'keywords': 'Keyword1, Keyword2',
+        'creator': 'Creator'
+      });
+      doc.__private__.putInfo();
+      expect(writeArray).toEqual(['3 0 obj', '<<', '/Producer (jsPDF 0.0.0)', '/Title (Title)', '/Subject (Subject)', '/Author (Author X)', '/Keywords (Keyword1, Keyword2)', '/Creator (Creator)', "/CreationDate (D:19871210000000+00'00')", '>>', 'endobj']);
+    }
   })
 
   it('jsPDF private function putTrailer', () => {
