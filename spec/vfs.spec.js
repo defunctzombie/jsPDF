@@ -1,3 +1,4 @@
+const jsPDF = require('../');
 
 describe('Module: vFS', () => {
   it('addFileToVFS and positive getFileFromVFS', () => {
