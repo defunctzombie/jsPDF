@@ -1,14 +1,16 @@
-/* global jsPDF */
 /**
  * @license
  * Licensed under the MIT License.
  * http://opensource.org/licenses/mit-license
  */
+
+const TTFFont = require('../libs/ttffont').TTFFont;
+
 /**
 * @name ttfsupport
 * @module
 */
-(function (jsPDF) {
+module.exports = function (jsPDFAPI) {
     "use strict";
 
     var binaryStringToUint8Array = function (binary_string) {
@@ -27,12 +29,12 @@
         } else {
             file = binaryStringToUint8Array(atob(file));
         }
-        font.metadata = jsPDF.API.TTFFont.open(file);
+        font.metadata = new TTFFont(file);
         font.metadata.Unicode = font.metadata.Unicode || {encoding: {}, kerning: {}, widths: []};
         font.metadata.glyIdsUsed = [0];
     }
 
-    jsPDF.API.events.push([ 
+    jsPDFAPI.events.push([ 
         'addFont'
         ,function(data) {
             var file = undefined;
@@ -53,4 +55,4 @@
             }
         }
     ]) // end of adding event handler
-})(jsPDF);
+};

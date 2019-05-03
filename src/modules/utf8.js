@@ -1,11 +1,12 @@
-/* global jsPDF */
+const TTFFont = require('../libs/ttffont').TTFFont;
+const PDFObject = require('../libs/ttffont').PDFObject;
+
 /**
 * @name utf8
 * @module
 */
-(function (jsPDF) {
+module.exports = function (jsPDFAPI) {
     'use strict';
-        var jsPDFAPI = jsPDF.API;
 
       /***************************************************************************************************/
       /* function : pdfEscape16                                                                          */
@@ -70,7 +71,7 @@
             var putStream = options.putStream;
             var pdfEscapeWithNeededParanthesis = options.pdfEscapeWithNeededParanthesis;
 
-              if ((font.metadata instanceof jsPDF.API.TTFFont) && (font.encoding === 'Identity-H')) { //Tag with Identity-H
+              if ((font.metadata instanceof TTFFont) && (font.encoding === 'Identity-H')) { //Tag with Identity-H
                 var widths = font.metadata.Unicode.widths;
                 var data = font.metadata.subset.encode(font.metadata.glyIdsUsed, 1);
                 var pdfOutput = data;
@@ -92,7 +93,7 @@
                 out('/Type /FontDescriptor');
                 out('/FontName /' + pdfEscapeWithNeededParanthesis(font.fontName));
                 out('/FontFile2 ' + fontTable + ' 0 R');
-                out('/FontBBox ' + jsPDF.API.PDFObject.convert(font.metadata.bbox));
+                out('/FontBBox ' + PDFObject.convert(font.metadata.bbox));
                 out('/Flags ' + font.metadata.flags);
                 out('/StemV ' + font.metadata.stemV);
                 out('/ItalicAngle ' + font.metadata.italicAngle);
@@ -107,7 +108,7 @@
                 out('/Type /Font');
                 out('/BaseFont /' + pdfEscapeWithNeededParanthesis(font.fontName));
                 out('/FontDescriptor ' + fontDescriptor + ' 0 R');
-                out('/W ' + jsPDF.API.PDFObject.convert(widths));
+                out('/W ' + PDFObject.convert(widths));
                 out('/CIDToGIDMap /Identity');
                 out('/DW 1000');
                 out('/Subtype /CIDFontType2');
@@ -150,7 +151,7 @@
             var putStream = options.putStream;
             var pdfEscapeWithNeededParanthesis = options.pdfEscapeWithNeededParanthesis;
             
-            if ((font.metadata instanceof jsPDF.API.TTFFont) && font.encoding === 'WinAnsiEncoding') { //Tag with WinAnsi encoding
+            if ((font.metadata instanceof TTFFont) && font.encoding === 'WinAnsiEncoding') { //Tag with WinAnsi encoding
               var data = font.metadata.rawData;
               var pdfOutput = data;
               var pdfOutput2 = "";
@@ -174,7 +175,7 @@
               out('/Type /FontDescriptor');
               out('/FontFile2 ' + fontTable + ' 0 R');
               out('/Flags 96');
-              out('/FontBBox ' + jsPDF.API.PDFObject.convert(font.metadata.bbox));
+              out('/FontBBox ' + PDFObject.convert(font.metadata.bbox));
               out('/FontName /' + pdfEscapeWithNeededParanthesis(font.fontName));
               out('/ItalicAngle ' + font.metadata.italicAngle);
               out('/Ascent ' + font.metadata.ascender);
@@ -184,7 +185,7 @@
               for (var j = 0; j < font.metadata.hmtx.widths.length; j++) {
                 font.metadata.hmtx.widths[j] = parseInt(font.metadata.hmtx.widths[j] * (1000 / font.metadata.head.unitsPerEm)); //Change the width of Em units to Point units.
               }
-              out('<</Subtype/TrueType/Type/Font/ToUnicode ' + cmap + ' 0 R/BaseFont/' + font.fontName + '/FontDescriptor ' + fontDescriptor + ' 0 R' + '/Encoding/' + font.encoding + ' /FirstChar 29 /LastChar 255 /Widths ' + jsPDF.API.PDFObject.convert(font.metadata.hmtx.widths) + '>>');
+              out('<</Subtype/TrueType/Type/Font/ToUnicode ' + cmap + ' 0 R/BaseFont/' + font.fontName + '/FontDescriptor ' + fontDescriptor + ' 0 R' + '/Encoding/' + font.encoding + ' /FirstChar 29 /LastChar 255 /Widths ' + PDFObject.convert(font.metadata.hmtx.widths) + '>>');
               out('endobj');
               font.isAlreadyPutted = true;
             }
@@ -315,4 +316,4 @@
             ,utf8EscapeFunction
         ]);
         
-})(jsPDF);
+};

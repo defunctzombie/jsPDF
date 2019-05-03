@@ -12,6 +12,9 @@ const outlineMixin = require('./modules/outline');
 const addImageMixin = require('./modules/addimage');
 const totalPagesMixin = require('./modules/total_pages');
 const annotationsMixin = require('./modules/annotations');
+const vfsMixin = require('./modules/vfs');
+const ttfMixin = require('./modules/ttfsupport');
+const utf8Mixin = require('./modules/utf8');
 
 module.exports = (function (global) {
   'use strict';
@@ -5195,6 +5198,9 @@ module.exports = (function (global) {
   addImageMixin(jsPDF.API);
   totalPagesMixin(jsPDF.API);
   annotationsMixin(jsPDF.API);
+  vfsMixin(jsPDF.API);
+  ttfMixin(jsPDF.API);
+  utf8Mixin(jsPDF.API);
 
   return jsPDF;
 })(global);

@@ -1,18 +1,14 @@
 /* eslint-disable no-control-regex */
-/* global jsPDF */
 /************************************************
  * Title : custom font                          *
  * Start Data : 2017. 01. 22.                   *
  * Comment : TEXT API                           *
  ************************************************/
 
-/******************************
- * jsPDF extension API Design *
- * ****************************/
-(function(jsPDF){
+module.exports = (function() {
     "use strict";
 
-    jsPDF.API.TTFFont = (function () {
+    const TTFFont = (function () {
         /************************************************************************/
         /* function : open                                                       */
         /* comment : Decode the encoded ttf content and create a TTFFont object. */
@@ -1661,7 +1657,7 @@
         return Subset;
     })();
 
-    jsPDF.API.PDFObject = (function () {
+    const PDFObject = (function () {
         var pad;
 
         function PDFObject() {}
@@ -1710,4 +1706,9 @@
         };
         return PDFObject;
     })();
-})(jsPDF);
+
+    return {
+        TTFFont,
+        PDFObject,
+    };
+})();

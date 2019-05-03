@@ -1,4 +1,3 @@
-/* global jsPDF */
 /**
  * jsPDF virtual FileSystem functionality
  *
@@ -12,7 +11,7 @@
  * @name vFS
  * @module
  */
-(function (jsPDFAPI) {
+module.exports = function (jsPDFAPI) {
     "use strict";
     
     var _initializeVFS = function () {        
@@ -72,4 +71,4 @@
         }
         return null;
     };
-})(jsPDF.API);
+};
