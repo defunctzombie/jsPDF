@@ -1,4 +1,6 @@
-/* global describe, it, expect, comparePdf jsPDF */
+/* global describe, it, expect */
+const jsPDF = require('../');
+const comparePdf = require('./utils/compare');
 
 describe('Module: Cell', () => {
   it('getTextDimensions', () => {

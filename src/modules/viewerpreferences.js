@@ -1,4 +1,3 @@
-/* global jsPDF */
 /**
  * jsPDF viewerPreferences Plugin
  * @author Aras Abbasi (github.com/arasabbasi)
@@ -13,7 +12,7 @@
  * @name viewerpreferences
  * @module
  */
-(function (jsPDFAPI) {
+module.exports = function (jsPDFAPI) {
     "use strict";
     /**
      * Set the ViewerPreferences of the generated PDF
@@ -229,4 +228,4 @@
         this.internal.viewerpreferences.configuration = configuration;
         return this;
     };
-})(jsPDF.API);
+};

@@ -1,4 +1,3 @@
-/*global jsPDF */
 /** 
  * @license
  * ====================================================================
@@ -34,7 +33,7 @@
 * @name cell
 * @module
 */
-(function (jsPDFAPI) {
+module.exports = function (jsPDFAPI) {
     'use strict';
 
     var NO_MARGINS = { left: 0, top: 0, bottom: 0, right: 0 };
@@ -493,4 +492,4 @@
         printingHeaderRow = false;
     };
 
-})(jsPDF.API);
+};

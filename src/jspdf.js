@@ -17,6 +17,8 @@ const ttfMixin = require('./modules/ttfsupport');
 const utf8Mixin = require('./modules/utf8');
 const autoprintMixin = require('./modules/autoprint');
 const javascriptMixin = require('./modules/javascript');
+const cellMixin = require('./modules/cell');
+const viewerPreferencesMixin = require('./modules/viewerpreferences');
 
 module.exports = (function (global) {
   'use strict';
@@ -5205,6 +5207,8 @@ module.exports = (function (global) {
   utf8Mixin(jsPDF.API);
   autoprintMixin(jsPDF.API);
   javascriptMixin(jsPDF.API);
+  cellMixin(jsPDF.API);
+  viewerPreferencesMixin(jsPDF.API);
 
   return jsPDF;
 })(global);
