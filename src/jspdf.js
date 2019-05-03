@@ -15,6 +15,8 @@ const annotationsMixin = require('./modules/annotations');
 const vfsMixin = require('./modules/vfs');
 const ttfMixin = require('./modules/ttfsupport');
 const utf8Mixin = require('./modules/utf8');
+const autoprintMixin = require('./modules/autoprint');
+const javascriptMixin = require('./modules/javascript');
 
 module.exports = (function (global) {
   'use strict';
@@ -5201,6 +5203,8 @@ module.exports = (function (global) {
   vfsMixin(jsPDF.API);
   ttfMixin(jsPDF.API);
   utf8Mixin(jsPDF.API);
+  autoprintMixin(jsPDF.API);
+  javascriptMixin(jsPDF.API);
 
   return jsPDF;
 })(global);

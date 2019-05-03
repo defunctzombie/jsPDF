@@ -1,4 +1,3 @@
-/*global jsPDF */
 /**
  * @license
  * ==================================================================== 
@@ -31,7 +30,7 @@
  * @name javascript
  * @module
 */
-(function (jsPDFAPI) {
+module.exports = function (jsPDFAPI) {
     'use strict';
     var jsNamesObj, jsJsObj, text;
 	/**
@@ -69,4 +68,4 @@
         );
         return this;
     };
-}(jsPDF.API));
+};

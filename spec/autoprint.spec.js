@@ -1,8 +1,10 @@
 
-/* global describe, it, jsPDF, comparePdf, expect */
+/* global describe, it, expect */
 /**
  * Standard spec tests
  */
+const jsPDF = require('../');
+const comparePdf = require('./utils/compare');
 
 describe('Module: Autoprint', () => {
   it('should generate an autoprinting document with non-conform variant ', () => {

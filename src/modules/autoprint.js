@@ -10,7 +10,7 @@
 * @name autoprint
 * @module
 */
-(function (jsPDFAPI) {
+module.exports = function (jsPDFAPI) {
   'use strict';
 
   /**
@@ -56,4 +56,4 @@
     }
     return this;
   };
-})(jsPDF.API);
+};
