@@ -19,6 +19,7 @@ const autoprintMixin = require('./modules/autoprint');
 const javascriptMixin = require('./modules/javascript');
 const cellMixin = require('./modules/cell');
 const viewerPreferencesMixin = require('./modules/viewerpreferences');
+const xmpMixin = require('./modules/xmp_metadata');
 
 module.exports = (function (global) {
   'use strict';
@@ -5209,6 +5210,7 @@ module.exports = (function (global) {
   javascriptMixin(jsPDF.API);
   cellMixin(jsPDF.API);
   viewerPreferencesMixin(jsPDF.API);
+  xmpMixin(jsPDF.API);
 
   return jsPDF;
 })(global);

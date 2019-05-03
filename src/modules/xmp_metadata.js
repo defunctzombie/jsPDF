@@ -27,7 +27,7 @@
 * @name xmp_metadata
 * @module
 */
-(function (jsPDFAPI) {
+module.exports = function (jsPDFAPI) {
     'use strict';
 
     var postPutResources = function () {
@@ -84,4 +84,4 @@
         }
         return this;
     };
-}(jsPDF.API));
+};

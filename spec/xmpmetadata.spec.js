@@ -1,4 +1,6 @@
-/* global describe, it, jsPDF, comparePdf */
+/* global describe, it */
+const jsPDF = require('../');
+const comparePdf = require('./utils/compare');
 
 describe('Module: xmp_metadata', () => {
     it('make some metadata var. 1', () => {
