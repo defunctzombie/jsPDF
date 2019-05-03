@@ -1,11 +1,13 @@
 
-/* global describe, it, jsPDF, comparePdf */
+/* global describe, it, */
 /**
  * Standard spec tests
  *
  * These tests return the datauristring so that reference files can be generated.
  * We compare the exact output.
  */
+const jsPDF = require('../');
+const comparePdf = require('./utils/compare');
 
 describe('Core: Shapes', () => {
   it('should draw circles', () => {
