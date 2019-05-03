@@ -1,4 +1,3 @@
-/* global jsPDF, Deflater, PNG */
 /**
  * @license
  * 
@@ -25,12 +24,16 @@
  * ====================================================================
  */
 
+const PNG = require('../libs/png');
+const adler32cs = require('../libs/adler32cs');
+const Deflater = require('../libs/Deflater');
+
 /**
 * jsPDF PNG PlugIn
 * @name png_support
 * @module
 */
-(function (jsPDFAPI, global) {
+module.exports = function (jsPDFAPI) {
   'use strict'
 
   /*
@@ -71,10 +74,6 @@
      4       Paeth
    */
 
-  var doesNotHavePngJS = function () {
-    return typeof global.PNG !== 'function' || typeof global.FlateStream !== 'function';
-  };
-
   var canCompress = function (value) {
     return value !== jsPDFAPI.image_compression.NONE && hasCompressionJS();
   };
@@ -107,7 +106,7 @@
     bytes = applyPngFilterMethod(bytes, lineLength, colorsPerPixel, filter_method);
 
     var header = new Uint8Array(createZlibHeader(level));
-    var checksum = jsPDF.API.adler32cs.fromBuffer(bytes.buffer);
+    var checksum = adler32cs.fromBuffer(bytes.buffer);
 
     var deflate = new Deflater(level);
     var a = deflate.append(bytes);
@@ -313,11 +312,6 @@
       imageData = new Uint8Array(imageData);
 
     if (this.__addimage__.isArrayBufferView(imageData)) {
-
-      if (doesNotHavePngJS()) {
-        throw new Error("PNG support requires png.js and zlib.js");
-      }
-
       image = new PNG(imageData);
       imageData = image.imgData;
       bitsPerComponent = image.bits;
@@ -466,8 +460,4 @@
       return { alias: alias, data: imageData, index: index, filter: filter, decodeParameters: decodeParameters, transparency: trns, palette: pal, sMask: smask, predictor: predictor, width: image.width, height: image.height, bitsPerComponent: bitsPerComponent, colorSpace: colorSpace };
     }
   }
-
-})(jsPDF.API, typeof self !== "undefined" && self || typeof window !== "undefined" && window || typeof global !== "undefined" && global || Function('return typeof this === "object" && this.content')() || Function('return this')());
-// `self` is undefined in Firefox for Android content script context
-// while `this` is nsIContentFrameMessageManager
-// with an attribute `content` that corresponds to the window
+};
