@@ -1,12 +1,11 @@
 
-/* global describe, it, jsPDF, expect */
+/* global describe, it, expect */
 /**
  * Standard spec tests
  */
+const jsPDF = require('../');
 
 describe('Module: addimage bas64Validation', () => {
-	var global = (typeof self !== "undefined" && self || typeof window !== "undefined" && window || typeof global !== "undefined" && global || Function('return typeof this === "object" && this.content')() || Function('return this')());
-  
 	if (global.isNode !== true) {
 		it('addImage: base64 validation in use with addImage-Call', () => {
 			var doc = new jsPDF();

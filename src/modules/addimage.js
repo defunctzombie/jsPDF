@@ -1,4 +1,3 @@
-/* global jsPDF */
 /** @license
  * jsPDF addImage plugin
  * Copyright (c) 2012 Jason Siefken, https://github.com/siefkenj/
@@ -32,7 +31,7 @@
 * @name addImage
 * @module
 */
-(function (jsPDFAPI) {
+module.exports = function (jsPDFAPI) {
     'use strict';
 
     var namespace = 'addImage_';
@@ -800,5 +799,4 @@
 
         return image;
     };
-
-})(jsPDF.API);
+};
