@@ -5,8 +5,7 @@
     "!**/*nospec.js"
   ],
   "helpers": [
-    "helpers/NodeHelper.js",
-    "utils/compare.js"
+    "helpers/NodeHelper.js"
   ],
   "stop-on-failure": false,
   "stopSpecOnExpectationFailure": false,

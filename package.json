@@ -3,7 +3,7 @@
   "version": "1.5.3",
   "homepage": "https://github.com/mrrio/jspdf",
   "description": "PDF Document creation from JavaScript",
-  "main": "dist/jspdf.min.js",
+  "main": "src/jspdf.js",
   "bugs": {
     "url": "https://github.com/MrRio/jsPDF/issues"
   },
@@ -82,7 +82,7 @@
     "test": "./node_modules/.bin/karma start karma.saucelabs.conf.js --single-run --verbose && for a in coverage/*; do codeclimate-test-reporter < \"$a/lcov.info\"; break; done",
     "test-local": "./node_modules/.bin/karma start karma.conf.js",
     "test-local-dist": "./node_modules/.bin/karma start karma.dist.conf.js",
-    "test-node": "node build type=node minify=false && jasmine --config=spec/support/jasmine.json",
+    "test-node": "jasmine --config=spec/support/jasmine.json",
     "test-training": "node spec/utils/reference-server.js",
     "delete-docs": "node deletedocs.js",
     "generate-docs": "./node_modules/.bin/jsdoc -c jsdoc.json --readme README.md"

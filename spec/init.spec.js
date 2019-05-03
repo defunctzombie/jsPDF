@@ -1,15 +1,16 @@
 
-/* global describe, it, jsPDF, comparePdf, jasmine, expect */
+/* global describe, it, jasmine, expect */
 /**
  * Standard spec tests
  *
  * These tests return the datauristring so that reference files can be generated.
  * We compare the exact output.
  */
+const jsPDF = require('../');
+const comparePdf = require('./utils/compare');
 
 describe('Core: Initialization Options', () => {
-  var global = (typeof self !== "undefined" && self || typeof window !== "undefined" && window || typeof global !== "undefined" && global || Function('return typeof this === "object" && this.content')() || Function('return this')());
-  
+
   it('should make a compressed document', () => {
     const doc = jsPDF({
       compress: true

@@ -1,4 +1,3 @@
-/* global jsPDF */
 /*
  * Copyright (c) 2012 chick307 <chick307@gmail.com>
  *
@@ -6,9 +5,7 @@
  * http://opensource.org/licenses/mit-license
  */
 
-(function (jsPDF, callback) {
-  jsPDF.API.adler32cs = callback();
-})(jsPDF, function () {
+module.exports = (function () {
   var _hasArrayBuffer = typeof ArrayBuffer === 'function' &&
     typeof Uint8Array === 'function';
 
@@ -175,4 +172,4 @@
   }
 
   return exports;
-});
+})();

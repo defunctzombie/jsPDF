@@ -1,7 +1,11 @@
 /* eslint-disable no-console */
-/* global saveAs, define, RGBColor */
+/* global saveAs, RGBColor */
 // eslint-disable-next-line no-unused-vars
-var jsPDF = (function (global) {
+
+const btoa = require('btoa');
+const filtersMixin = require('./modules/filters');
+
+module.exports = (function (global) {
   'use strict';
 
   /**
@@ -5176,18 +5180,7 @@ var jsPDF = (function (global) {
    */
   jsPDF.version = '0.0.0';
 
-  if (typeof define === 'function' && define.amd) {
-    define('jsPDF', function () {
-      return jsPDF;
-    });
-  } else if (typeof module !== 'undefined' && module.exports) {
-    module.exports = jsPDF;
-    module.exports.jsPDF = jsPDF;
-  } else {
-    global.jsPDF = jsPDF;
-  }
+  filtersMixin(jsPDF.API);
+
   return jsPDF;
-}(typeof self !== "undefined" && self || typeof window !== "undefined" && window || typeof global !== "undefined" && global || Function('return typeof this === "object" && this.content')() || Function('return this')()));
-// `self` is undefined in Firefox for Android content script context
-// while `this` is nsIContentFrameMessageManager
-// with an attribute `content` that corresponds to the window
+})(global);

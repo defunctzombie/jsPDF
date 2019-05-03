@@ -1,4 +1,3 @@
-/* global jsPDF, Deflater */
 /**
  * jsPDF filters PlugIn
  * Copyright (c) 2014 Aras Abbasi 
@@ -7,7 +6,10 @@
  * http://opensource.org/licenses/mit-license
  */
 
-(function (jsPDFAPI) {
+const adler32cs = require('../libs/adler32cs');
+const Deflater = require('../libs/Deflater');
+
+module.exports = function AddFiltersModule(jsPDFAPI) {
   'use strict';
 
   var ASCII85Encode = function (a) {
@@ -83,7 +85,7 @@
     while (i--) {
       arr[i] = data.charCodeAt(i);
     }
-    adler32 = jsPDFAPI.adler32cs.from(data);
+    adler32 = adler32cs.from(data);
     deflater = new Deflater(6);
     data = deflater.append(new Uint8Array(arr));
     data = appendBuffer(data, deflater.flush());
@@ -142,4 +144,4 @@
 
     return { data: data, reverseChain: reverseChain.reverse().join(" ") };
   };
-})(jsPDF.API);
+}
