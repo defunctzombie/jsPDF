@@ -1,4 +1,3 @@
-/* global jsPDF */
 /**
  * @license
  * Copyright (c) 2014 Steven Spungin (TwelveTone LLC)  steven@twelvetone.tv
@@ -14,7 +13,7 @@
  * @name outline
  * @module
  */
-(function(jsPDFAPI) {
+module.exports = function(jsPDFAPI) {
 	'use strict';
 
 	var namesOid;
@@ -244,4 +243,4 @@
 	]);
 
 	return this;
-})(jsPDF.API);
+};

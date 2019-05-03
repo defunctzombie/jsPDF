@@ -8,6 +8,7 @@ const RGBColor = require('./libs/rgbcolor');
 const filtersMixin = require('./modules/filters');
 const standardFontMetricsMixin = require('./modules/standard_fonts_metrics');
 const splitTextToSizeMixin = require('./modules/split_text_to_size');
+const outlineMixin = require('./modules/outline');
 
 module.exports = (function (global) {
   'use strict';
@@ -5187,6 +5188,7 @@ module.exports = (function (global) {
   filtersMixin(jsPDF.API);
   standardFontMetricsMixin(jsPDF.API);
   splitTextToSizeMixin(jsPDF.API);
+  outlineMixin(jsPDF.API);
 
   return jsPDF;
 })(global);
