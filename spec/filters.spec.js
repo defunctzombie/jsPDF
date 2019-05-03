@@ -1,11 +1,12 @@
 'use strict'
-/* global describe, it, jsPDF, expect */
+/* global describe, it, expect */
 /**
  * Standard spec tests
  *
  * These tests return the datauristring so that reference files can be generated.
  * We compare the exact output.
  */
+const jsPDF = require('../');
 
 describe('Module: Filters', () => {
 
