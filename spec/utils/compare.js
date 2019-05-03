@@ -1,8 +1,7 @@
 /* eslint-disable no-console */
 /* global expect, fail */
 
-const fs = require('fs');
-const path = require('path');
+const loadBinaryResource = require('./loadBinaryResource');
 
 function cleanUpUnicode(value) {
   var i = 0;
@@ -16,19 +15,6 @@ function cleanUpUnicode(value) {
 
 const sendReference = function () {
 };
-
-const prefix = global.isNode ? '/../' : '/base/spec/';
-
-//if (globalVar.isNode === true) {
-
-function loadBinaryResource(url) {
-  try {
-    return fs.readFileSync((path.resolve(__dirname + prefix + url)), { encoding: 'latin1' });
-  } catch (ex) {
-    console.log(ex);
-  }
-  return '';
-}
 
 /*
 } else {

@@ -1,8 +1,11 @@
 
-/* global describe, it, jsPDF, comparePdf, loadBinaryResource */
+/* global describe, it */
 /**
  * Standard spec tests
  */
+const jsPDF = require('../');
+const comparePdf = require('./utils/compare');
+const loadBinaryResource = require('./utils/loadBinaryResource');
 
 describe('Module: putTotalPages', () => {
 	it('standardfont', () => {

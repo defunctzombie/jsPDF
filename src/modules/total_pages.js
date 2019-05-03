@@ -1,4 +1,3 @@
-/* global jsPDF */
 /** 
  * @license
  * ==================================================================== 
@@ -29,7 +28,7 @@
  * @name total_pages
  * @module
  */
-(function (jsPDFAPI) {
+module.exports = function (jsPDFAPI) {
     'use strict';
   /**
   * @name putTotalPages
@@ -59,4 +58,4 @@
 
     return this;
   }
-})(jsPDF.API);
+}
