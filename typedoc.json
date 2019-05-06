@@ -1,0 +1,6 @@
+{
+  "out": "docs-typedoc",
+  "mode": "file",
+  "excludeExternals": true,
+  "includeDeclarations": true
+}

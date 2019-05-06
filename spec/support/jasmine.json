@@ -1,13 +1,12 @@
 {
   "spec_dir": "spec",
   "spec_files": [
-    "**/*[sS]pec.js",
-    "!**/*nospec.js"
+    "**/*[sS]pec.ts",
+    "!**/*nospec.ts"
   ],
   "helpers": [
     "helpers/NodeHelper.js"
   ],
-  "stop-on-failure": false,
-  "stopSpecOnExpectationFailure": false,
+  "stopSpecOnExpectationFailure": true,
   "random": false
 }

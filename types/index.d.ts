@@ -7,23 +7,6 @@
 
 declare module 'jspdf' {
 
-    interface Annotation {
-        type: 'text' | 'freetext' | 'link';
-        title?: string;
-        bounds: {
-            x: number,
-            y: number,
-            w: number,
-            h: number
-        };
-        contents: string;
-        open?: boolean;
-        color?: string;
-        name?: string;
-        top?: number;
-        pageNumber?: number;
-    }
-
     interface TextWithLinkOptions {
         pageNumber?: number;
         magFactor?: 'Fit' | 'FitH' | 'FitV' | 'XYZ';
@@ -409,38 +392,6 @@ declare module 'jspdf' {
         userUnit?: number;
     }
 
-    interface Point {
-        x: number;
-        y: number;
-    }
-
-    interface Rectangle extends Point {
-        w: number;
-        h: number;
-    }
-
-    interface Matrix {
-        sx: number;
-        shy: number;
-        shx: number;
-        sy: number;
-        tx: number;
-        ty: number;
-        join(separator?: string): string;
-        multiply(matrix: Matrix): Matrix;
-        decompose(): {
-            scale: Matrix;
-            translate: Matrix;
-            rotate: Matrix;
-            skew: Matrix;
-        };
-        toString(): string;
-        inversed(): string;
-        applyToPoint(point: Point): Point;
-        applyToRectangle(rect: Rectangle): Rectangle;
-        clone(): Matrix;
-    }
-
     interface PageInfo {
         objId: number;
         pageNumber: number;
@@ -467,12 +418,6 @@ declare module 'jspdf' {
     }
 
     class jsPDF {
-        constructor(options?: jsPDFOptions);
-        constructor(orientation?: 'p' | 'portrait' | 'l' | 'landscape',
-            unit?: 'pt' | 'px' | 'in' | 'mm' | 'cm' | 'ex' | 'em' | 'pc',
-            format?: string | number[],
-            compressPdf?: boolean);
-
         CapJoinStyles: any;
         version: string;
 
@@ -511,12 +456,6 @@ declare module 'jspdf' {
         lines(lines: any[], x: any, y: any, scale?: any, style?: string, closed?: boolean): jsPDF;
         movePage(targetPage: number, beforePage: number): jsPDF;
         output(): string;
-        output(type: 'arraybuffer'): ArrayBuffer;
-        output(type: 'blob'): Blob;
-        output(type: 'bloburi' | 'bloburl'): URL;
-        output(type: 'datauristring' | 'dataurlstring', options?: { filename?: string }): string;
-        output(type: 'pdfobjectnewwindow' | 'pdfjsnewwindow' | 'dataurlnewwindow'): Window;
-        output(type: 'dataurl' | 'datauri', options?: { filename?: string }): boolean;
         pdfEscape(text: string, flags: any): string;
         path(lines?: any[], style?: string, patternKey?: string, patternData?: any): jsPDF;
         rect(x: number, y: number, w: number, h: number, style?: string): jsPDF;
@@ -595,20 +534,8 @@ declare module 'jspdf' {
         addHTML(element: any, x: number, y: number, options: any, callback: Function): jsPDF;
         addHTML(element: any, callback: Function): jsPDF;
 
-        // jsPDF plugin: addImage
-        addImage(imageData: string | HTMLImageElement | HTMLCanvasElement | Uint8Array, format: string, x: number, y: number, w: number, h: number, alias?: string, compression?: ImageCompression, rotation?: number): jsPDF;
-        addImage(imageData: string | HTMLImageElement | HTMLCanvasElement | Uint8Array, x: number, y: number, w: number, h: number, alias?: string, compression?: ImageCompression, rotation?: number): jsPDF;
-        addImage(options: ImageOptions): jsPDF;
-        getImageProperties(imageData: string | HTMLImageElement | HTMLCanvasElement | Uint8Array): ImageProperties;
-
         // jsPDF plugin: arabic
         processArabic(text: string): string;
-
-        // jsPDF plugin: Annotations
-        createAnnotation(options: Annotation): void;
-        link(x: number, y: number, w: number, h: number, options: any): void;
-        textWithLink(text: string, x: number, y: number, options: any): number;
-        getTextWidth(text: string): number;
 
         // jsPDF plugin: AutoPrint
         autoPrint(options?: AutoPrintInput): jsPDF;
@@ -656,6 +583,7 @@ declare module 'jspdf' {
 
         //jsPDF plugin: Outline
         outline: Outline;
+
         // jsPDF plugin: fileloading
         loadFile(url: string, sync?: true): string;
         loadFile(url: string, sync: false, callback: (data: string) => string): void;
@@ -668,11 +596,6 @@ declare module 'jspdf' {
 
         // jsPDF plugin: JavaScript
         addJS(javascript: string): jsPDF;
-
-        // jsPDF plugin: split_text_to_size
-        getCharWidthsArray(text: string, options?: any): any[];
-        getStringUnitWidth(text: string, options?: any): number;
-        splitTextToSize(text: string, maxlen: number, options?: any): any;
 
         // jsPDF plugin: SVG
         addSVG(svgtext: string, x: number, y: number, w?: number, h?: number): jsPDF;

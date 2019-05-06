@@ -4,7 +4,7 @@
  * @name extractImageFromDataUrl
  * @function 
  * @param {string} dataUrl a valid data URI of format 'data:[<MIME-type>][;base64],<data>'
- * @returns {Array}an Array containing the following
+ * @returns {object}an Object containing the following
  * [0] the complete data URI
  * [1] <MIME-type>
  * [2] format - the second part of the mime-type i.e 'png' in 'image/png'
