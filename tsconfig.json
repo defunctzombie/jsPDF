@@ -1,7 +1,6 @@
 {
   "compilerOptions": {
     "outDir": "./dist",
-    "allowJs": true,
     "target": "es5",
     "module": "commonjs",
     "lib": ["es6", "dom"],
@@ -11,5 +10,6 @@
     "forceConsistentCasingInFileNames": true,
     "types": ["jasmine", "node"]
   },
-  "include": ["./src/**/*", "./spec/**/*"]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "./spec/**/*"]
 }

@@ -11,7 +11,7 @@ import { Decode as ASCIIHexDecode, Encode as ASCIIHexEncode } from './AsciiHex';
 import { Encode as FlateEncode } from './Flate';
 import { f2, hpf } from './rounding';
 
-import { DocumentOptions, FontEncodingType, Format, Orientation, RenderTarget } from './types';
+import { DocumentOptions, Format, Orientation, RenderTarget } from './types';
 
 // Size in pt of various paper formats
 const pageFormats: { [key: string]: [number, number] } = {

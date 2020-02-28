@@ -1,8 +1,7 @@
+import * as parseDataUrl from 'data-urls';
+
 import { Document } from '../src/index';
 import comparePdf from './utils/compare';
-
-import * as Base64 from '../src/libs/base64';
-import * as DataUrl from '../src/libs/dataurl';
 import ProcessJpeg from '../src/modules/jpeg_support';
 
 describe('Module: JPEGSupport', () => {
@@ -16,8 +15,7 @@ describe('Module: JPEGSupport', () => {
             format: 'a4',
         });
 
-        const dataUrl = DataUrl.parse(blackpixel);
-        const imageData = Base64.toUint8Array(dataUrl.data);
+        const imageData = parseDataUrl(blackpixel).body;
         const image = ProcessJpeg(imageData);
 
         doc.image(image, 15, 40, 1, 1);
@@ -34,8 +32,7 @@ describe('Module: JPEGSupport', () => {
             format: 'a4',
         });
 
-        const dataUrl = DataUrl.parse(jpg);
-        const imageData = Base64.toUint8Array(dataUrl.data);
+        const imageData = parseDataUrl(jpg).body;
         const image = ProcessJpeg(imageData);
 
         doc.image(image, 100, 200, 280, 210);

@@ -1,8 +1,8 @@
+import * as parseDataUrl from 'data-urls';
+
 import { Document } from '../src/index';
 import comparePdf from './utils/compare';
 
-import * as Base64 from '../src/libs/base64';
-import * as DataUrl from '../src/libs/dataurl';
 import ProcessJpeg from '../src/modules/jpeg_support';
 
 describe('Module: image', () => {
@@ -16,9 +16,8 @@ describe('Module: image', () => {
             format: 'a4',
         });
 
-        const dataUrl = DataUrl.parse(jpg);
-        const imageData = Base64.toUint8Array(dataUrl.data);
-        const image = ProcessJpeg(imageData);
+        const parsed = parseDataUrl(jpg);
+        const image = ProcessJpeg(parsed.body);
 
         doc.image(image, 300, 200, 280, 210, { rotation: 45 });
         comparePdf(doc.output(), 'rotation-45.pdf', 'addimage');
@@ -30,20 +29,10 @@ describe('Module: image', () => {
             format: 'a4',
         });
 
-        const dataUrl = DataUrl.parse(jpg);
-        const imageData = Base64.toUint8Array(dataUrl.data);
-        const image = ProcessJpeg(imageData);
+        const parsed = parseDataUrl(jpg);
+        const image = ProcessJpeg(parsed.body);
 
         doc.image(image, 300, 200, 280, 210, { rotation: 90 });
         comparePdf(doc.output(), 'rotation-90.pdf', 'addimage');
     });
-
-    /*
-    it('sHashCode', () => {
-        const doc = new jsPDF();
-
-        expect(doc.__addimage__.sHashCode()).toEqual(0);
-        expect(doc.__addimage__.sHashCode('testtest')).toEqual(-1145835484);
-    });
-    */
 });

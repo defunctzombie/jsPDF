@@ -57,21 +57,6 @@ const color_spaces = {
     DEVICE_N: 'DeviceN',
 };
 
-/**
- * DECODE METHODS
- */
-const decode = {
-    DCT_DECODE: 'DCTDecode',
-    FLATE_DECODE: 'FlateDecode',
-    LZW_DECODE: 'LZWDecode',
-    JPX_DECODE: 'JPXDecode',
-    JBIG2_DECODE: 'JBIG2Decode',
-    ASCII85_DECODE: 'ASCII85Decode',
-    ASCII_HEX_DECODE: 'ASCIIHexDecode',
-    RUN_LENGTH_DECODE: 'RunLengthDecode',
-    CCITT_FAX_DECODE: 'CCITTFaxDecode',
-};
-
 // Image functionality ported from pdf.js
 function putImage(this: DocumentCore, image) {
     const filter = this.getFilters();
