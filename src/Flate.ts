@@ -1,5 +1,5 @@
-import * as adler32cs from './libs/adler32cs';
-import * as Deflater from './libs/Deflater';
+import * as adler32cs from '@vendor/adler32cs';
+import * as Deflater from '@vendor/deflater';
 
 function appendBuffer(buffer1, buffer2) {
     const combinedBuffer = new Uint8Array(buffer1.byteLength + buffer2.byteLength);

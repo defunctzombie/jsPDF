@@ -12,31 +12,11 @@ const btoa = require('abab/lib/btoa');
  * @returns {String}
  */
 var arrayBufferToBinaryString = function(buffer) {
-    try {
-        return atob(btoa(String.fromCharCode.apply(null, buffer)));
-    } catch (e) {
-        if (
-            typeof Uint8Array !== 'undefined' &&
-            typeof Uint8Array.prototype.reduce !== 'undefined'
-        ) {
-            return new Uint8Array(buffer)
-                .reduce(function(data, byte) {
-                    return data.push(String.fromCharCode(byte)), data;
-                }, [])
-                .join('');
-        }
-    }
-};
-
-/**
- * Check to see if ArrayBuffer is supported
- *
- * @name supportsArrayBuffer
- * @function
- * @returns {boolean}
- */
-var supportsArrayBuffer = function() {
-    return typeof ArrayBuffer !== 'undefined' && typeof Uint8Array !== 'undefined';
+    return new Uint8Array(buffer)
+        .reduce(function(data, byte) {
+            return data.push(String.fromCharCode(byte)), data;
+        }, [])
+        .join('');
 };
 
 /**
@@ -49,7 +29,6 @@ var supportsArrayBuffer = function() {
  */
 var isArrayBufferView = function(object) {
     return (
-        supportsArrayBuffer() &&
         typeof Uint32Array !== 'undefined' &&
         (object instanceof Int8Array ||
             object instanceof Uint8Array ||
@@ -73,7 +52,7 @@ var isArrayBufferView = function(object) {
  * @returns {boolean}
  */
 var isArrayBuffer = function(object) {
-    return supportsArrayBuffer() && object instanceof ArrayBuffer;
+    return object instanceof ArrayBuffer;
 };
 
 module.exports.isArrayBuffer = isArrayBuffer;

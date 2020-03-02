@@ -5,7 +5,7 @@
  * http://opensource.org/licenses/mit-license
  */
 
-import { arrayBufferToBinaryString, isArrayBuffer, isArrayBufferView } from '../libs/array_buffer';
+import { arrayBufferToBinaryString, isArrayBuffer, isArrayBufferView } from '@vendor/array_buffer';
 
 /**
  * 0xc0 (SOF) Huffman  - Baseline DCT

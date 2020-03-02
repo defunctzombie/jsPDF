@@ -18,7 +18,12 @@
     "type": "git",
     "url": "https://github.com/defunctzombie/jspdf.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@vendor/adler32cs": "./vendor/adler32cs",
+    "@vendor/array_buffer": "./vendor/array_buffer",
+    "@vendor/deflater": "./vendor/deflater",
+    "@vendor/png": "./vendor/png"
+  },
   "devDependencies": {
     "@types/jasmine": "3.5.7",
     "@types/node": "13.7.7",
@@ -36,12 +41,13 @@
     "karma-jasmine-matchers": "4.0.2",
     "karma-verbose-reporter": "0.0.6",
     "prettier": "1.19.1",
+    "rgbcolor": "1.0.1",
     "ts-node": "8.6.2",
     "typedoc": "0.16.11",
     "typescript": "3.8.2"
   },
   "scripts": {
-    "build": "tsc --allowJs && tsc --declaration",
+    "build": "tsc",
     "build:docs": "typedoc ./src/*.ts",
     "prepublish": "npm run build",
     "test-local": "./node_modules/.bin/karma start karma.conf.js",

@@ -1,4 +1,5 @@
-import RgbColor from './libs/RgbColor';
+import * as RgbColor from 'rgbcolor';
+
 import { f2, f3 } from './rounding';
 
 function encodeColorString(options) {

@@ -24,12 +24,10 @@
  * ====================================================================
  */
 
-import PNG = require('../libs/png');
-
-import * as adler32cs from '../libs/adler32cs';
-import * as Deflater from '../libs/Deflater';
-
-import { arrayBufferToBinaryString, isArrayBuffer, isArrayBufferView } from '../libs/array_buffer';
+import PNG = require('@vendor/png');
+import * as adler32cs from '@vendor/adler32cs';
+import * as Deflater from '@vendor/deflater';
+import { arrayBufferToBinaryString, isArrayBuffer, isArrayBufferView } from '@vendor/array_buffer';
 
 // TODO(roman) move to shared enum
 const ImageCompression = {

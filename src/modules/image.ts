@@ -28,7 +28,7 @@
  * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import { arrayBufferToBinaryString, isArrayBufferView } from '../libs/array_buffer';
+import { arrayBufferToBinaryString, isArrayBufferView } from '@vendor/array_buffer';
 
 import DocumentCore from '../DocumentCore';
 
