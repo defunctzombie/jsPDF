@@ -1,6 +1,17 @@
 import { decodeColorString, encodeColorString } from '../color';
 import DocumentCore from '../DocumentCore';
 import { f2, f3, hpf } from '../rounding';
+import Matrix from '../Matrix';
+import ShadingPattern from '../ShadingPattern';
+import TilingPattern from '../TilingPattern';
+
+interface PatternData {
+    key: string;
+    matrix?: Matrix;
+    boundingBox?: number[];
+    xStep?: number;
+    yStep?: number;
+}
 
 declare module '../DocumentCore' {
     interface DocumentCore {
@@ -846,7 +857,11 @@ DocumentCore.prototype.stroke = function(this: DocumentCore) {
 };
 
 /** @private */
-DocumentCore.prototype.fillWithOptionalPattern = function(this: DocumentCore, style, pattern) {
+DocumentCore.prototype.fillWithOptionalPattern = function(
+    this: DocumentCore,
+    style,
+    pattern: PatternData
+) {
     if (typeof pattern === 'object') {
         this.fillWithPattern(pattern, style);
     } else {
@@ -879,7 +894,7 @@ DocumentCore.prototype.fill = function(this: DocumentCore, pattern) {
  * @returns {jsPDF}
  * @memberof jsPDF#
  */
-DocumentCore.prototype.fillEvenOdd = function(this: DocumentCore, pattern) {
+DocumentCore.prototype.fillEvenOdd = function(this: DocumentCore, pattern: PatternData) {
     this.fillWithOptionalPattern('f*', pattern);
     return this;
 };
@@ -894,7 +909,7 @@ DocumentCore.prototype.fillEvenOdd = function(this: DocumentCore, pattern) {
  * @returns {jsPDF}
  * @memberof jsPDF#
  */
-DocumentCore.prototype.fillStroke = function(this: DocumentCore, pattern) {
+DocumentCore.prototype.fillStroke = function(this: DocumentCore, pattern: PatternData) {
     this.fillWithOptionalPattern('B', pattern);
     return this;
 };
@@ -909,7 +924,7 @@ DocumentCore.prototype.fillStroke = function(this: DocumentCore, pattern) {
  * @returns {jsPDF}
  * @memberof jsPDF#
  */
-DocumentCore.prototype.fillStrokeEvenOdd = function(this: DocumentCore, pattern) {
+DocumentCore.prototype.fillStrokeEvenOdd = function(this: DocumentCore, pattern: PatternData) {
     this.fillWithOptionalPattern('B*', pattern);
     return this;
 };
@@ -940,7 +955,7 @@ DocumentCore.prototype.fillStrokeEvenOdd = function(this: DocumentCore, pattern)
  * @memberof jsPDF#
  * @description All .clip() after calling drawing ops with a style argument of null.
  */
-DocumentCore.prototype.clip = function(this: DocumentCore, rule) {
+DocumentCore.prototype.clip = function(this: DocumentCore, rule?: 'evenodd') {
     // Call .clip() after calling drawing ops with a style argument of null
     // W is the PDF clipping op
     if ('evenodd' === rule) {
@@ -972,7 +987,7 @@ DocumentCore.prototype.clipEvenOdd = function(this: DocumentCore) {
  * @deprecated
  * @ignore
  */
-DocumentCore.prototype.clipFixed = function(this: DocumentCore, rule) {
+DocumentCore.prototype.clipFixed = function(this: DocumentCore, rule?: 'evenodd') {
     return this.clip(rule);
 };
 
@@ -990,7 +1005,11 @@ DocumentCore.prototype.clipFixed = function(this: DocumentCore, rule) {
  * @memberof jsPDF#
  * @name setLineDashPattern
  */
-DocumentCore.prototype.setLineDashPattern = function(this: DocumentCore, dashArray, dashPhase) {
+DocumentCore.prototype.setLineDashPattern = function(
+    this: DocumentCore,
+    dashArray: number[],
+    dashPhase: number
+) {
     dashArray = dashArray || [];
     dashPhase = dashPhase || 0;
 
@@ -998,14 +1017,14 @@ DocumentCore.prototype.setLineDashPattern = function(this: DocumentCore, dashArr
         throw new Error('Invalid arguments passed to jsPDF.setLineDash');
     }
 
-    dashArray = dashArray
+    const dashArrayStr: string = dashArray
         .map((x) => {
             return f3(x * this.scaleFactor);
         })
         .join(' ');
-    dashPhase = f3(dashPhase * this.scaleFactor);
+    const dashPhaseStr: string = f3(dashPhase * this.scaleFactor);
 
-    this.out('[' + dashArray + '] ' + dashPhase + ' d');
+    this.out('[' + dashArrayStr + '] ' + dashPhaseStr + ' d');
     return this;
 };
 
@@ -1016,7 +1035,7 @@ DocumentCore.prototype.setLineDashPattern = function(this: DocumentCore, dashArr
  * @methodOf jsPDF#
  * @name beginTilingPattern
  */
-DocumentCore.prototype.beginTilingPattern = function(this: DocumentCore, pattern) {
+DocumentCore.prototype.beginTilingPattern = function(this: DocumentCore, pattern: TilingPattern) {
     this.beginNewRenderTarget(
         pattern.boundingBox[0],
         pattern.boundingBox[1],
@@ -1036,7 +1055,11 @@ DocumentCore.prototype.beginTilingPattern = function(this: DocumentCore, pattern
  * @methodOf jsPDF#
  * @name endTilingPattern
  */
-DocumentCore.prototype.endTilingPattern = function(this: DocumentCore, key, pattern) {
+DocumentCore.prototype.endTilingPattern = function(
+    this: DocumentCore,
+    key: string,
+    pattern: TilingPattern
+) {
     // retrieve the stream
     pattern.stream = this.pages[this.currentPage].join('\n');
 
@@ -1057,7 +1080,11 @@ DocumentCore.prototype.endTilingPattern = function(this: DocumentCore, key, patt
  * @methodOf jsPDF#
  * @name addPattern
  */
-DocumentCore.prototype.addShadingPattern = function(this: DocumentCore, key, pattern) {
+DocumentCore.prototype.addShadingPattern = function(
+    this: DocumentCore,
+    key: string,
+    pattern: ShadingPattern
+) {
     this.addPattern(key, pattern);
     return this;
 };

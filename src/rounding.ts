@@ -1,4 +1,4 @@
-function roundToPrecision(number: number, parmPrecision) {
+function roundToPrecision(number: number, parmPrecision: number) {
     const tmpPrecision = parmPrecision;
     if (isNaN(number) || isNaN(tmpPrecision)) {
         throw new Error('Invalid argument passed to jsPDF.roundToPrecision');

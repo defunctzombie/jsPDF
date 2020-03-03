@@ -4,6 +4,20 @@ type Format = string | number[];
 type Orientation = 'p' | 'portrait' | 'l' | 'landscape';
 type Unit = 'pt' | 'px' | 'in' | 'mm' | 'cm' | 'ex' | 'em' | 'pc';
 
+interface DocumentProperties {
+    title?: string;
+    subject?: string;
+    author?: string;
+    keywords?: string;
+    creator?: string;
+}
+
+interface PageInfo {
+    objId: number;
+    pageNumber: number;
+    pageContext: any;
+}
+
 interface DocumentOptions {
     orientation?: Orientation;
     unit?: Unit;

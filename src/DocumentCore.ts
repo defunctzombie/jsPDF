@@ -6,12 +6,20 @@ import PubSub from './PubSub';
 import ShadingPattern from './ShadingPattern';
 import TilingPattern from './TilingPattern';
 
+import Pattern from './Pattern';
 import { Decode as ASCII85Decode, Encode as ASCII85Encode } from './Ascii85';
 import { Decode as ASCIIHexDecode, Encode as ASCIIHexEncode } from './AsciiHex';
 import { Encode as FlateEncode } from './Flate';
 import { f2, hpf } from './rounding';
 
-import { DocumentOptions, Format, Orientation, RenderTarget } from './types';
+import {
+    DocumentOptions,
+    Format,
+    Orientation,
+    RenderTarget,
+    DocumentProperties,
+    PageInfo,
+} from './types';
 
 // Size in pt of various paper formats
 const pageFormats: { [key: string]: [number, number] } = {
@@ -58,16 +66,16 @@ const pageFormats: { [key: string]: [number, number] } = {
     'credit-card': [153, 243],
 };
 
-function padd2(number) {
-    return ('0' + parseInt(number)).slice(-2);
+function padd2(number: number): string {
+    return ('0' + String(number)).slice(-2);
 }
 
-function padd2Hex(hexString) {
+function padd2Hex(hexString: string): string {
     hexString = hexString.toString();
     return ('00' + hexString).substr(hexString.length);
 }
 
-function convertDateToPDFDate(parmDate) {
+function convertDateToPDFDate(parmDate: Date): string {
     let result = '';
     const tzoffset = parmDate.getTimezoneOffset(),
         tzsign = tzoffset < 0 ? '+' : '-',
@@ -134,7 +142,7 @@ function interpolateAndEncodeRGBStream(colors, numberSamples) {
     return out.trim();
 }
 
-function convertPDFDateToDate(parmPDFDate): Date {
+function convertPDFDateToDate(parmPDFDate: string): Date {
     const year = parseInt(parmPDFDate.substr(2, 4), 10);
     const month = parseInt(parmPDFDate.substr(6, 2), 10) - 1;
     const date = parseInt(parmPDFDate.substr(8, 2), 10);
@@ -267,7 +275,7 @@ class DocumentCore {
     protected gStatesMap = {}; // see fonts
     protected activeGState = null;
     protected page = 0;
-    protected pagesContext = [];
+    protected pagesContext: any[] = [];
 
     protected renderTargets = {};
     protected renderTargetMap = {};
@@ -293,7 +301,7 @@ class DocumentCore {
     protected layoutMode: string = 'continuous';
     protected pageMode: string; // default 'UseOutlines'
 
-    protected documentProperties = {
+    protected documentProperties: DocumentProperties = {
         title: '',
         subject: '',
         author: '',
@@ -371,7 +379,7 @@ class DocumentCore {
         this.pdfVersion = value;
     }
 
-    public setCreationDate(date?) {
+    public setCreationDate(date?: Date | string) {
         let tmpCreationDateString;
         const regexPDFCreationDate = /^D:(20[0-2][0-9]|203[0-7]|19[7-9][0-9])(0[0-9]|1[0-2])([0-2][0-9]|3[0-1])(0[0-9]|1[0-9]|2[0-3])(0[0-9]|[1-5][0-9])(0[0-9]|[1-5][0-9])(\+0[0-9]|\+1[0-4]|-0[0-9]|-1[0-1])'(0[0-9]|[1-5][0-9])'?$/;
         if (date === undefined) {
@@ -389,7 +397,7 @@ class DocumentCore {
         return this.creationDate;
     }
 
-    public getCreationDate(type?: 'jsDate'): Date | any {
+    public getCreationDate(type?: string): Date | any {
         if (type === 'jsDate') {
             return convertPDFDateToDate(this.creationDate);
         }
@@ -414,14 +422,14 @@ class DocumentCore {
         return this.fileId;
     }
 
-    public getDocumentProperty(key) {
+    public getDocumentProperty(key: string) {
         if (Object.keys(this.documentProperties).indexOf(key) === -1) {
             throw new Error('Invalid argument passed to jsPDF.getDocumentProperty');
         }
         return this.documentProperties[key];
     }
 
-    public getDocumentProperties() {
+    public getDocumentProperties(): DocumentProperties {
         return this.documentProperties;
     }
 
@@ -435,7 +443,7 @@ class DocumentCore {
      * @memberof jsPDF#
      * @name setDocumentProperties
      */
-    public setDocumentProperties(properties) {
+    public setDocumentProperties(properties: DocumentProperties) {
         // copying only those properties we can render.
         for (const property in this.documentProperties) {
             if (this.documentProperties.hasOwnProperty(property) && properties[property]) {
@@ -445,11 +453,11 @@ class DocumentCore {
         return this;
     }
 
-    public setProperties(properties) {
+    public setProperties(properties: DocumentProperties) {
         this.setDocumentProperties(properties);
     }
 
-    public setDocumentProperty(key, value) {
+    public setDocumentProperty(key: string, value: string) {
         if (Object.keys(this.documentProperties).indexOf(key) === -1) {
             throw new Error('Invalid arguments passed to jsPDF.setDocumentProperty');
         }
@@ -474,7 +482,7 @@ class DocumentCore {
         this.lineHeightFactor = value;
     }
 
-    public getLineHeightFactor() {
+    public getLineHeightFactor(): number {
         return this.lineHeightFactor;
     }
 
@@ -514,7 +522,7 @@ class DocumentCore {
         });
     }
 
-    public getPageInfo(pageNumberOneBased) {
+    public getPageInfo(pageNumberOneBased: number): PageInfo {
         if (isNaN(pageNumberOneBased) || pageNumberOneBased % 1 !== 0) {
             throw new Error('Invalid argument passed to jsPDF.getPageInfo');
         }
@@ -526,14 +534,17 @@ class DocumentCore {
         };
     }
 
-    public getPageInfoByObjId(objId) {
+    public getPageInfoByObjId(objId: number): PageInfo | null {
         if (isNaN(objId) || objId % 1 !== 0) {
             throw new Error('Invalid argument passed to jsPDF.getPageInfoByObjId');
         }
-        for (const pageNumber in this.pagesContext) {
-            if (this.pagesContext[pageNumber].objId === objId) {
-                return this.getPageInfo(pageNumber);
+
+        let idx = 0;
+        for (const context of this.pagesContext) {
+            if (context && context.objId === objId) {
+                return this.getPageInfo(idx);
             }
+            idx = idx + 1;
         }
         return null;
     }
@@ -549,7 +560,7 @@ class DocumentCore {
      * @memberof jsPDF#
      * @name getFontList
      */
-    public getFontList() {
+    public getFontList(): { [key: string]: string[] } {
         let list = {},
             fontName,
             fontStyle;
@@ -592,7 +603,11 @@ class DocumentCore {
      *
      * @returns {jsPDF}
      */
-    public setDisplayMode(zoom, layout, pmode) {
+    public setDisplayMode(
+        zoom: number | 'fullheight' | 'fullwidth' | 'fullpage' | 'original' | string,
+        layout?: 'continuous' | 'single' | 'twoleft' | 'tworight' | 'two',
+        pmode?: 'UseOutlines' | 'UseThumbs' | 'FullScreen'
+    ) {
         this.setZoomMode(zoom);
         this.setLayoutMode(layout);
         this.setPageMode(pmode);
@@ -607,8 +622,8 @@ class DocumentCore {
      * @param {string} precision
      * @returns {jsPDF}
      */
-    public setPrecision(value) {
-        if (typeof parseInt(value, 10) === 'number') {
+    public setPrecision(value: number | string) {
+        if (typeof value === 'string' && typeof parseInt(value, 10) === 'number') {
             this.precision = parseInt(value, 10);
         }
     }
@@ -637,7 +652,7 @@ class DocumentCore {
      * @memberof jsPDF#
      * @name getR2L
      */
-    public getR2L() {
+    public getR2L(): boolean {
         return this.R2L;
     }
 
@@ -663,7 +678,7 @@ class DocumentCore {
         return result;
     }
 
-    public getStyle(style) {
+    public getStyle(style: string): string {
         // see path-painting operators in PDF spec
         let op = this.defaultPathOperation; // stroke
 
@@ -696,7 +711,7 @@ class DocumentCore {
         return op;
     }
 
-    public getPageWidth(pageNumber: number = this.currentPage) {
+    public getPageWidth(pageNumber: number = this.currentPage): number {
         return (
             (this.pagesContext[pageNumber].mediaBox.topRightX -
                 this.pagesContext[pageNumber].mediaBox.bottomLeftX) /
@@ -704,7 +719,7 @@ class DocumentCore {
         );
     }
 
-    public getPageHeight(pageNumber: number = this.currentPage) {
+    public getPageHeight(pageNumber: number = this.currentPage): number {
         return (
             (this.pagesContext[pageNumber].mediaBox.topRightY -
                 this.pagesContext[pageNumber].mediaBox.bottomLeftY) /
@@ -1347,7 +1362,7 @@ class DocumentCore {
             .replace(/\)/g, '\\)');
     }
 
-    protected clipRuleFromStyle(style) {
+    protected clipRuleFromStyle(style: string) {
         switch (style) {
             case 'f':
             case 'F':
@@ -1395,7 +1410,7 @@ class DocumentCore {
      * @param {String} key Might also be null, if no later reference to this gState is needed
      * @param {Object} gState The gState object
      */
-    protected addGState(key, gState) {
+    protected addGState(key: string | null, gState) {
         // only add it if it is not already present (the keys provided by the user must be unique!)
         if (key && this.gStatesMap[key]) {
             return;
@@ -1432,7 +1447,7 @@ class DocumentCore {
      * @param {String} key The key by it can be referenced later. The keys must be unique!
      * @param {API.Pattern} pattern The pattern
      */
-    protected addPattern(key, pattern) {
+    protected addPattern(key: string, pattern: Pattern) {
         // only add it if it is not already present (the keys provided by the user must be unique!)
         if (this.patternMap[key]) {
             return;
