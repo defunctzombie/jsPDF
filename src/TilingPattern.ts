@@ -22,7 +22,7 @@ class TilingPattern extends Pattern {
     public stream: string;
     public cloneIndex: number;
 
-    constructor(boundingBox: number[], xStep, yStep, gState, matrix: Matrix) {
+    constructor(boundingBox: number[], xStep: number, yStep: number, gState, matrix: Matrix) {
         super(gState, matrix);
 
         this.boundingBox = boundingBox;

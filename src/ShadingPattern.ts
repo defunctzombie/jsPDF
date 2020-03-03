@@ -20,9 +20,15 @@ import Pattern from './Pattern';
 class ShadingPattern extends Pattern {
     public type: number;
     public colors: string;
-    public coords: string;
+    public coords: number[];
 
-    constructor(type: string, coords: string, colors: string, gState, matrix: Matrix) {
+    constructor(
+        type: 'axial' | 'radial',
+        coords: number[],
+        colors: string,
+        gState,
+        matrix: Matrix
+    ) {
         super(gState, matrix);
 
         this.type = type === 'axial' ? 2 : 3;
