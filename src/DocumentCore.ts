@@ -19,6 +19,7 @@ import {
     RenderTarget,
     DocumentProperties,
     PageInfo,
+    StyleVariant,
 } from './types';
 
 // Size in pt of various paper formats
@@ -248,7 +249,7 @@ class DocumentCore {
     protected userUnit: number = 1.0;
     protected unit: string = 'mm';
     protected precision: number;
-    protected defaultPathOperation: string = 'S';
+    protected defaultPathOperation: StyleVariant = 'S';
     protected R2L: boolean = false;
     protected collections = {};
 
@@ -656,7 +657,7 @@ class DocumentCore {
         return this.R2L;
     }
 
-    public isValidStyle(style) {
+    public isValidStyle(style?: StyleVariant) {
         const validStyleVariants = [
             undefined,
             null,
@@ -671,14 +672,10 @@ class DocumentCore {
             'B*',
             'n',
         ];
-        let result = false;
-        if (validStyleVariants.indexOf(style) !== -1) {
-            result = true;
-        }
-        return result;
+        return validStyleVariants.indexOf(style) !== -1;
     }
 
-    public getStyle(style: string): string {
+    protected getStyle(style: StyleVariant): StyleVariant {
         // see path-painting operators in PDF spec
         let op = this.defaultPathOperation; // stroke
 
@@ -1362,7 +1359,7 @@ class DocumentCore {
             .replace(/\)/g, '\\)');
     }
 
-    protected clipRuleFromStyle(style: string) {
+    protected clipRuleFromStyle(style: StyleVariant) {
         switch (style) {
             case 'f':
             case 'F':
@@ -1477,7 +1474,7 @@ class DocumentCore {
         return clone;
     }
 
-    protected fillWithPattern(patternData, style) {
+    protected fillWithPattern(patternData, style: StyleVariant) {
         const identityMatrix = new Matrix(1, 0, 0, 1, 0, 0, this.precision);
         let patternId = this.patternMap[patternData.key];
         const pattern = this.patterns[patternId];
@@ -1530,18 +1527,18 @@ class DocumentCore {
         this.out('%\xBA\xDF\xAC\xE0');
     }
 
-    protected putStyle(style, patternKey, patternData) {
+    protected putStyle(style: StyleVariant, patternKey, patternData) {
         const identityMatrix = new Matrix(1, 0, 0, 1, 0, 0, this.precision);
         if (style === null) {
             return;
         }
 
-        style = this.getStyle(style);
+        const newStyle = this.getStyle(style);
 
         // stroking / filling / both the path
         if (!patternKey) {
-            if (style !== 'n') {
-                this.out(style);
+            if (newStyle !== 'n') {
+                this.out(newStyle);
             }
             return;
         }
@@ -1558,7 +1555,7 @@ class DocumentCore {
 
         patternData || (patternData = identityMatrix);
 
-        this.fillWithPattern(patternData, style);
+        this.fillWithPattern(patternData, newStyle);
     }
 
     protected putPage(page) {

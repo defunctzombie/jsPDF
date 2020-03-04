@@ -46,4 +46,18 @@ interface RenderTarget {
     objectNumber: number;
 }
 
+type StyleVariant =
+    | undefined
+    | null
+    | 'S'
+    | 'D'
+    | 'F'
+    | 'DF'
+    | 'FD'
+    | 'f'
+    | 'f*'
+    | 'B'
+    | 'B*'
+    | 'n';
+
 type FontEncodingType = 'StandardEncoding' | 'MacRomanEncoding' | 'Identity-H' | 'WinAnsiEncoding';

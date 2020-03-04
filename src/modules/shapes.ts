@@ -4,6 +4,7 @@ import { f2, f3, hpf } from '../rounding';
 import Matrix from '../Matrix';
 import ShadingPattern from '../ShadingPattern';
 import TilingPattern from '../TilingPattern';
+import { StyleVariant } from '../types';
 
 interface PatternData {
     key: string;
@@ -20,26 +21,26 @@ declare module '../DocumentCore' {
             y: number,
             w: number,
             h: number,
-            style?,
+            style?: StyleVariant,
             patternKey?,
             patternData?
         ): DocumentCore;
         setDrawColor(ch1, ch2?, ch3?, ch4?);
         getFillColor();
         setFillColor(ch1, ch2?, ch3?, ch4?);
-        setLineCap(style);
-        setLineJoin(style);
-        setMiterLimit(length);
+        setLineCap(style: StyleVariant);
+        setLineJoin(style: StyleVariant);
+        setMiterLimit(length: number);
         getLineHeight();
         setLineWidth(width: number);
         getDrawColor();
-        path(lines, style, patternKey, patternData);
-        triangle(x1, y1, x2, y2, x3, y3, style?, patternKey?, patternData?);
-        roundedRect(x, y, w, h, rx, ry, style?, patternKey?, patternData?);
-        ellipse(x, y, rx, ry, style?, patternKey?, patternData?);
-        circle(x, y, r, style?, patternKey?, patternData?);
-        line(x1, y1, x2, y2, style?);
-        lines(lines, x, y, scale?, style?, closed?, patternKey?, patternData?);
+        path(lines, style: StyleVariant, patternKey, patternData);
+        triangle(x1, y1, x2, y2, x3, y3, style?: StyleVariant, patternKey?, patternData?);
+        roundedRect(x, y, w, h, rx, ry, style?: StyleVariant, patternKey?, patternData?);
+        ellipse(x, y, rx, ry, style?: StyleVariant, patternKey?, patternData?);
+        circle(x, y, r, style?: StyleVariant, patternKey?, patternData?);
+        line(x1, y1, x2, y2, style?: StyleVariant);
+        lines(lines, x, y, scale?, style?: StyleVariant, closed?, patternKey?, patternData?);
         moveTo(x, y);
         lineTo(x, y);
         curveTo(x1, y1, x2, y2, x3, y3);
@@ -51,7 +52,7 @@ declare module '../DocumentCore' {
         fillEvenOdd(pattern);
         fillStroke(pattern);
         fillStrokeEvenOdd(pattern);
-        fillWithOptionalPattern(style, pattern);
+        fillWithOptionalPattern(style: StyleVariant, pattern);
         clip(rule);
         clipEvenOdd();
         clipFixed(rule);
@@ -106,7 +107,7 @@ DocumentCore.prototype.rect = function(
     y,
     w,
     h,
-    style?,
+    style?: StyleVariant,
     patternKey?,
     patternData?
 ) {
@@ -258,7 +259,7 @@ DocumentCore.prototype.setFillColor = function(this: DocumentCore, ch1, ch2, ch3
  * @memberof jsPDF#
  * @name setLineCap
  */
-DocumentCore.prototype.setLineCap = function(this: DocumentCore, style) {
+DocumentCore.prototype.setLineCap = function(this: DocumentCore, style: StyleVariant) {
     const id = CapJoinStyles[style];
     if (id === undefined) {
         throw new Error(
@@ -284,7 +285,7 @@ DocumentCore.prototype.setLineCap = function(this: DocumentCore, style) {
  * @memberof jsPDF#
  * @name setLineJoin
  */
-DocumentCore.prototype.setLineJoin = function(this: DocumentCore, style) {
+DocumentCore.prototype.setLineJoin = function(this: DocumentCore, style: StyleVariant) {
     const id = CapJoinStyles[style];
     if (id === undefined) {
         throw new Error(
@@ -356,7 +357,13 @@ DocumentCore.prototype.getDrawColor = function(this: DocumentCore) {
  * @memberof jsPDF#
  * @name path
  */
-DocumentCore.prototype.path = function(this: DocumentCore, lines, style, patternKey, patternData) {
+DocumentCore.prototype.path = function(
+    this: DocumentCore,
+    lines,
+    style: StyleVariant,
+    patternKey,
+    patternData
+) {
     for (let i = 0; i < lines.length; i++) {
         const leg = lines[i];
         const coords = leg.c;
@@ -404,7 +411,7 @@ DocumentCore.prototype.triangle = function(
     y2,
     x3,
     y3,
-    style,
+    style: StyleVariant,
     patternKey,
     patternData
 ) {
@@ -460,7 +467,7 @@ DocumentCore.prototype.roundedRect = function(
     h,
     rx,
     ry,
-    style,
+    style: StyleVariant,
     patternKey,
     patternData
 ) {
@@ -518,7 +525,7 @@ DocumentCore.prototype.ellipse = function(
     y,
     rx,
     ry,
-    style,
+    style: StyleVariant,
     patternKey,
     patternData
 ) {
@@ -598,7 +605,7 @@ DocumentCore.prototype.circle = function(
     x,
     y,
     r,
-    style,
+    style: StyleVariant,
     patternKey,
     patternData
 ) {
@@ -656,7 +663,7 @@ DocumentCore.prototype.lines = function(
     x,
     y,
     scale,
-    style,
+    style: StyleVariant,
     closed,
     patternKey,
     patternData
@@ -823,7 +830,10 @@ DocumentCore.prototype.discardPath = function(this: DocumentCore) {
     return this;
 };
 
-DocumentCore.prototype.setDefaultPathOperation = function(this: DocumentCore, operator) {
+DocumentCore.prototype.setDefaultPathOperation = function(
+    this: DocumentCore,
+    operator: StyleVariant
+) {
     if (this.isValidStyle(operator)) {
         this.defaultPathOperation = operator;
     }
@@ -859,7 +869,7 @@ DocumentCore.prototype.stroke = function(this: DocumentCore) {
 /** @private */
 DocumentCore.prototype.fillWithOptionalPattern = function(
     this: DocumentCore,
-    style,
+    style: StyleVariant,
     pattern: PatternData
 ) {
     if (typeof pattern === 'object') {
